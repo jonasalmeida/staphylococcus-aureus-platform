@@ -1,0 +1,437 @@
+<!-- Cândida's Script 05-08-2011 -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+
+<title class="titleStyle"> Staphylococcus aureus Platform - Query Form </title>
+
+<script type="text/javascript" src="js/jquery-1.6.2.js"></script>
+<script type="text/javascript" src="js/tableSorter.js"></script>
+<script type="text/javascript" src="js/tableFilter.js"></script>
+<script type="text/javascript" src="js/table2CSV.js"></script> 
+
+<link href="style/CSSmenu.css" rel="stylesheet" type="text/css" media="screen">
+<link href="style/table.css" rel="stylesheet" type="text/css" media="screen">
+<link href="style/style.css" rel="stylesheet" type="text/css" media="screen">
+
+<style type="text/css" media="screen">
+#loading{
+        margin:0;
+        padding: 0;
+		    z-index: -1;
+        width: 900px;
+        height: 200px;
+        border: 1px solid gray;
+        background: url(images/ajax-loader.gif)no-repeat center center;
+		}
+
+</style>
+
+<script type="text/javascript">
+ var variavel = location.search.split("?");
+ var variavel1 = variavel[1].split("=");
+ var key = variavel1[1];
+
+function toggle1(showHideDiv, switchImgTag) {
+        var ele = document.getElementById(showHideDiv);
+        var imageEle = document.getElementById(switchImgTag);
+        if(ele.style.display == "block") {
+                ele.style.display = "none";
+                imageEle.innerHTML = "<img src='images/plus_sign_grey.png'>";
+        }
+        else {
+                ele.style.display = "block";
+                imageEle.innerHTML = "<img src='images/minus_sign_grey.png'>";
+        }
+}
+
+function toggle2(contentDiv, controlDiv) {
+        if (contentDiv.constructor == Array) {
+                for(i=0; i < contentDiv.length; i++) {
+                     toggle1(contentDiv[i], controlDiv[i]);
+                }
+        }
+        else {
+               toggle1(contentDiv, controlDiv);
+        }
+}
+
+$(document).ready(function(){
+ $('img').bind('click', function (evt) 
+  {        
+   if($(this).attr('id') == 'img1')
+    {
+     var query="http://204.232.200.16/s3db2/sparql.php?key="+key+"&query=SELECT ?Isolate ?MLST ?PFGE WHERE {?itqbisolate :R167340 ?molecularTyping . OPTIONAL {?molecularTyping :R172930 ?MLST . } OPTIONAL {?molecularTyping :R171929 ?PFGE . } ?itqbisolate rdfs:label ?Isolate } LIMIT=3000 &format=json&callback=?";
+     formataColuna(query);
+    } 
+    if($(this).attr('id') == 'img2')
+     {
+      var query="http://204.232.200.16/s3db2/sparql.php?key="+key+"&query=SELECT ?Isolate ?SCCmecComplex ?SCCmecType WHERE {?itqbisolate :R167340 ?molecularTyping . OPTIONAL {?molecularTyping :R175680 ?SCCmecComplex . } OPTIONAL {?molecularTyping :R175688 ?SCCmecType . } ?itqbisolate rdfs:label ?Isolate }&format=json&callback=?";
+      formataColuna(query);
+     } 
+     if($(this).attr('id') == 'img3')
+      {
+       var query="http://204.232.200.16/s3db2/sparql.php?key="+key+"&query=SELECT ?Isolate ?Species ?mecA ?SCCmec ?OxacillinSusceptibility ?CefoxitinSusceptibility WHERE {?itqbisolate :R167340 ?molecularTyping . OPTIONAL {?molecularTyping :R171828 ?mecA .} OPTIONAL {?molecularTyping :R175688 ?SCCmec .} OPTIONAL {?molecularTyping :R166546 ?OxacillinSusceptibility .} OPTIONAL {?molecularTyping :R149 ?CefoxitinSusceptibility .} ?molecularTyping :R171376 ?Species FILTER (regex(?Species, \"MRSA\") || regex (?Species, \"MSSA\")) .?itqbisolate rdfs:label ?Isolate }&format=json&callback=?";
+       formataColuna(query);
+      }
+	  if($(this).attr('id') == 'img4')
+      {
+       var query="http://204.232.200.16/s3db2/sparql.php?key="+key+"&query=DESCRIBE ?Isolate ?MLST ?PFGE WHERE {?itqbisolate :R167340 ?molecularTyping . OPTIONAL {?molecularTyping :R172930 ?MLST . } OPTIONAL {?molecularTyping :R171929 ?PFGE . } ?itqbisolate rdfs:label ?Isolate } LIMIT=3000 &format=json&callback=?";
+       formataColuna(query);
+      }
+ });
+
+  $(':checkbox').removeAttr('checked');
+  $(':checkbox').removeAttr('disabled');
+  $("#field").hide(); 
+  $("#field1").hide(); 
+  $("#field2").hide();
+  $("#field3").hide();
+  $("#field4").hide();
+  
+  $("#column").click(function(){
+   $("#field").toggle();
+  });
+ 
+ $("#column1").click(function(){
+   $("#field1").toggle();
+  });
+
+ $("#column2").click(function(){
+   $("#field2").toggle();
+  });
+
+ $("#column3").click(function(){
+   $("#field3").toggle();
+  });
+
+ $("#column4").click(function(){
+   $("#field4").toggle();
+  });
+
+ $('button#aquery').click(function() {
+   var url = "http://204.232.200.16/s3db2/sparql.php?key="+key+"&query=";
+   var sparql = $('textarea#aquery').val();
+   var query = (url + sparql + "&format=json&callback=?");
+   formataColuna(query);
+  });
+  
+  $('button#query').click(function() {
+   var select = [];
+   var sparql = [];
+   var sparql1 = [];
+   var total = $.find("input[type='checkbox'][name='column']:checked").length-1;
+   $("input[type=checkbox][name='column']:checked").each(function(i){
+    var column = [];
+    column.push($(this).val());
+    
+    var scolumn = column.toString();
+    var array = scolumn.split(",");
+           
+    var label = array[0];
+    var regra = array[1];
+    
+    sparql.push("?isolate" + i + " :" + regra + " ?" + label + " .");
+    
+    var field = [];
+    $("input[type=checkbox][name='"+label+"']:checked").each(function(){
+     field.push($(this).val());
+   });
+      
+     var sfield = field.toString();
+     var array1 = sfield.split(",");
+     var length = array1.length/2;
+                
+     for (n=0; n<length; n++) {
+      select.push("?" + array1[n*2]);
+      var label1 = array1[n*2];
+      var regra1 = array1[n*2+1];
+      
+      sparql1.push("?" + label + " :" + regra1 + " ?" + label1 + " .");
+        }
+      
+     var sparql3 = sparql.join("");
+     var sparql4 = sparql1.join("");
+     
+     if(total == i){
+      var select1 = select.join(" ");
+      var url = "http://204.232.200.16/s3db2/sparql.php?key="+key+"&query=";
+      var query = (url + "SELECT ?Isolate " + select1 + " WHERE {" + " OPTIONAL {" + sparql3 + sparql4 + "} ?isolate0 rdfs:label ?Isolate }&format=json&callback=?");
+      console.log(query);
+      formataColuna(query);
+     }
+    });
+  });   
+ });
+ 
+ function formataColuna(query){
+  var array = query.split("SELECT");
+  var string = array[1];
+  var array2 = string.split("WHERE");
+  var string2 = array2[0];
+  str = string2.replace(/ /gi,"");
+  str1 = str.replace(/\?/,"");
+  var str2 = str1.split("?");
+  executaQuery(query,str2);
+  $("#loading").show(); 
+  
+}
+ 
+
+ function executaQuery(json,header){
+  var size = header.length;
+  var table = "Quick Find: <input type='text' id='quickfind'><a id='cleanfilters' href='#'>Clear Filters</a><br><table id='results' class='tablesorter' border='0' cellpadding='0' cellspacing='1'><thead><tr>";
+  $.each(header, function(i) {
+   table += "<th>" + header[i] + "</th>";
+  });
+  table += "</tr></thead><tbody>";
+   
+  $.getJSON(json, function(data) {
+   $.each(data, function(i, object){ 
+    table += "<tr>";
+    $.each(object, function(j, obj){ 
+     table += "<td>" + obj + "</td>";
+    });
+    table += "</tr>";
+   });  
+   
+  table += "</tbody>";
+  table += "<tfoot><tr><td colspan=" + size + ">&nbsp;</td></tr></tfoot>";
+  table += "</table>";
+  
+  $('#loading').hide();
+  $('form').remove();
+  $('#container').html(table);
+  var options = {
+                additionalFilterTriggers: [$('#quickfind')],
+                clearFiltersControls: [$('#cleanfilters')]
+            };
+  $('#results').tableFilter(options);
+  $('#results').tablesorter({widgets: ['zebra']});
+
+var rowCount = $('#results >tbody >tr').length;  
+
+ });
+}
+
+</script>
+</head>
+<body>
+
+<!-- start div "header" -->
+<div id="header">
+<a href="home.html"></a>
+<a href="home.html">
+<img id="home" src="images/m_Home.png">
+</a>
+
+<b><i>Staphylococcus aureus</i> Platform</b>
+</div> <!-- end div "header" -->
+
+<br>
+
+<!-- MENU -->
+<div id="menu">
+<ul class="menu">
+ <script>  
+  document.write("<li><a href='dataset.html?key="+key+"' title='DataSet'><span>Data Set</span></a></li>");
+  document.write("<li><a href='storage.html?key="+key+"' title='VirtualREVCO'><span>Virtual REVCO</span></a></li>");
+  document.write("<li><a href='query.html?key="+key+"' title='SPARQL'>SPARQL Queries</a></li>");
+  document.write("<li><a href='stats.html?key="+key+"' title='Stats'><span>Statistical Analysis</span></a></li>");
+  document.write("<li><a href='2x2ct.html?key="+key+"'>&nbsp;Two-way Contingency Table</a></li>");  
+ </script>                             
+</ul>
+</div>
+<!-- End MENU -->
+
+<br>
+
+<!-- start div "export" -->
+<div id ="icons" style="padding:10px align:right";>
+<a href="#" onclick="$('#results').TableCSVExport();"><img src="images/excel.png" align="right" width="50" height="50"></a>
+
+<a href="#"><img onclick="window.print();return false;" src="images/Print.png" align="right" width="50" height="50"></a>
+
+</div><!-- end div "export" -->
+
+<!-- start div "other Queries" -->
+<div id ="icons" style="padding:10px align:left";>
+<a href="antibiogram.html" onclick=""><img src="images/antibiogram.png" align="left" width="150" height="30"></a>
+
+<a href="toxins.html"><img onclick="" src="images/toxins.png" align="left" width="150" height="30"></a>
+
+</div><!-- end div "other Queries" -->
+
+<br>
+
+<!-- start div "title" -->
+<div id="title">
+<p><b>&nbsp;SPARQL Querying System for Staphylococcus aureus</b><p>
+</div> <!-- end div "title" -->
+
+<br>
+
+<!-- start div container-->
+<div id="container">
+
+<!-- start quicky query-->
+<form action="" method="get" id="qquery"> 
+<fieldset>
+<legend><a id="myHeader7" href="javascript:toggle2('myContent7','myHeader7');"><img src="images/plus_sign_grey.png"></a>&nbsp;Quick Query</legend>
+<div id="myContent7" style="display: none;">
+
+<h2>MLST (ST) AND PFGE &nbsp;<img id="img1" src="images/go.png"></h2>
+
+<br>
+
+<h2>SCCmec type AND SCCmec complex &nbsp;<img id="img2" src="images/go.png"></h2>
+
+<br>
+
+<h2>mecA (+/-) AND SCCmec AND Oxacilin Susceptibility (R/I/S) AND Cefoxition Susceptibility (R/S/I)&nbsp;<img id="img3" src="images/go.png"></h2>
+
+<br>
+
+<h2>describe &nbsp;<img id="img4" src="images/go.png"></h2>
+</div>
+</fieldset>
+</form>
+
+<!-- end quick query-->
+
+<br>
+
+<!-- start query-->
+<form action="" method="get" id="query"> 
+<fieldset>
+<legend>Query Selector</legend>
+
+<div class="field">
+<label class="column"><input type="checkbox" name="column" id="column" value="SSI,R167338">&nbsp;Setting Sample Information</label>
+<div id="field">
+<label><input type="checkbox" name="SSI" value="IsolationDate,R167343">&nbsp;Isolation Date</label>
+<label><input type="checkbox" name="SSI" value="ClinicalRelevance,R167344">&nbsp;Clinical Relevance</label>
+<label><input type="checkbox" name="SSI" value="InfectionSource,R175678">&nbsp;Infection Source</label>
+<label><input type="checkbox" name="SSI" value="SamplingUnit,R167342">&nbsp;Sampling Unit</label>
+<label><input type="checkbox" name="SSI" value="SampleSource,R167345">&nbsp;Sample source</label>
+<label><input type="checkbox" name="SSI" value="Sample,R1070654">&nbsp;Type of Biological Sample</label>
+<label><input type="checkbox" name="SSI" value="Location,R2269">&nbsp;Anatomical Location</label>
+</div></div>
+
+<div class="field">
+<label class="column"><input type="checkbox" name="column" id="column1" value="IMT,R167340">&nbsp;ITQB Molecular Typing</label>
+<div id="field1">
+<label><input type="checkbox" name="IMT" value="Species,R171376">&nbsp;Species Identification</label>
+<label><input type="checkbox" name="IMT" value="PFGE,R171929">&nbsp;PFGE type</label>
+<label><input type="checkbox" name="IMT" value="SCCmecType,R175688">&nbsp;SCCmec type</label>
+<label><input type="checkbox" name="IMT" value="SCCmecSubtype,R175689">&nbsp;SCCmec subtype</label>
+<label><input type="checkbox" name="IMT" value="mecComplex,R175680">&nbsp;mec complex</label>
+<label><input type="checkbox" name="IMT" value="R">&nbsp;ccr complex</label> <!-- não sei qual é a regra! -->
+<label><input type="checkbox" name="IMT" value="ccrBallele,R1409167">&nbsp;ccrB allele</label>
+<label><input type="checkbox" name="IMT" value="spaRIDOM,R172383">&nbsp;spa type (RIDOM)</label>
+<label><input type="checkbox" name="IMT" value="spaBK,R172288">&nbsp;spa type (BK)</label>
+<label><input type="checkbox" name="IMT" value="MLST,R172930">&nbsp;MLST ST</label>
+<label><input type="checkbox" name="IMT" value="MLST,R1736294">&nbsp;PVL</label> 
+</div></div>
+
+<div class="field">
+<label class="column"><input type="checkbox" name="column" id="column2" value="SI,R167339">&nbsp;Setting Information</label>
+<div id="field2">
+<label><input type="checkbox" name="SI" value="Name,R167269">&nbsp;Name</label>
+<label><input type="checkbox" name="SI" value="Code,R167270">&nbsp;Code</label>
+<label><input type="checkbox" name="SI" value="Country,R167271">&nbsp;Country</label>
+</div></div>
+
+<div class="field">
+<label class="column"><input type="checkbox" name="column" id="column3" value="Project,R25480">&nbsp;Project</label>
+<div id="field3">
+<label><input type="checkbox" name="Project" value="PName,R25470">&nbsp;Project Name</label>
+<label><input type="checkbox" name="Project" value="Code,R167270">&nbsp;Code</label>
+</div></div>
+
+<div class="field">
+<label class="column"><input type="checkbox" name="column" id="column4" value="PI,R167337">&nbsp;Patient Information</label>
+<div id="field4">
+<label><input type="checkbox" name="PI" value="Age,R167281">&nbsp;Age</label>
+<label><input type="checkbox" name="PI" value="Gender,R167282">&nbsp;Gender</label>
+<label><input type="checkbox" name="PI" value="ICU,R175723">&nbsp;Hospital ICU</label>
+<label><input type="checkbox" name="PI" value="Immunocompromized,R167288">&nbsp;Immunocompromized</label>
+<label><input type="checkbox" name="PI" value="ClinicalDiagnosis,R167289">&nbsp;Clinical Diagnosis</label>
+<label><input type="checkbox" name="PI" value="SubjectType,R167306">&nbsp;Subject type</label>
+<label><input type="checkbox" name="PI" value="AnimalType,R175675">&nbsp;Animal type</label>
+</div></div>
+
+<br>
+
+<button type="button" id="query" style="position: middle"> Send Query </button>
+<input type="submit" value="Clear query" onclick="clear()"id="query" style="position: middle">
+
+</fieldset>
+</form>
+
+<!-- end query-->
+
+<br>
+
+<div id="loading" style="display:none;"></div>
+
+<br>
+
+<!-- start advanced query -->
+
+<form action="" method="get" id="aquery"> 
+<fieldset>
+<legend>
+<div id="headerDivImg">
+ <a id="myHeader6" href="javascript:toggle2('myContent6','myHeader6');"><img src="images/plus_sign_grey.png"></a>&nbsp;Advanced Query</div><br></legend>
+<div id="myContent6" style="display: none;">
+
+<!-- start div "title2" -->
+<div id="title2">
+<p><b>SPARQL Query</b></p>
+
+</div> <!-- end div "title2" -->
+
+<br>
+        
+<textarea id="aquery" rows="20" cols="80">
+SELECT ?Isolate ?SCCmec ?MLST WHERE {?itqbisolate :R167340 ?molecularTyping .?itqbisolate rdfs:label ?Isolate .?molecularTyping :R172930 ?MLST .?molecularTyping :R175688 ?SCCmec . }
+</textarea>
+        
+<div id="options">
+ <h2>Output type: HTML Table</h2>
+</div>
+
+ <button type="button" id="aquery">Send Query</button>
+ <input type="reset" value="Reset" />
+</form>
+</div>
+<!-- end div advanced query -->
+
+<br>
+
+</div>
+
+<br>
+<br>
+
+<!-- start div "bottom" -->
+<div id="bottom">
+ <b>S3DB - Simple Sloppy Semantic Database </b>
+ <br>
+ <a href="http://www.s3db.org/">
+ <img id="S3DB.org" src="images/link.png"/>
+ </a>
+ <a href="mailto:candida@itqb.unl.pt.com?Subject=Hello%20again">
+ <img id="email" src="images/govdelivery_email_option.png" alt="mail" width="35" height="35" />
+ </a>
+
+ <a href="info.html">
+ <img id="info" src="images/Information-icon.png" width="30" height="30" />
+ </a>
+</div> <!-- end div "bottom" -->
+
+</body>
+</html>

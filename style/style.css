@@ -1,0 +1,100 @@
+body {
+	margin: 0;
+	padding: 0;
+	background: #FFFFFF;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+	color: #333333;
+	text-align: center; /* hack para o IE */ 
+	}
+
+/* Header */
+#header {
+	background-color:#04C7FF;	
+	font:verdana; 
+	font-size: 30px; 
+	text-align:center; 
+	color:#FFFFFF;
+	}
+
+/* Container */
+#container {
+	width:900px;	
+	margin:30px auto;
+	color:#666;
+	padding:0;
+	}
+
+/* Bottom */
+#bottom {
+	background-color:#11CAFF;	
+	font:verdana;
+	font-size: 30px; 
+	text-align:center; 
+	color:#FFFFFF;
+	}
+
+#title p{
+	background-color: #99FFCC; 
+	border-color:#99FFCC; 
+	font-size:16px; 
+	font-family:verdana; 
+	color: #FFFFFF; 
+	}
+
+h2 {
+	font-size:12px; 
+	font-family:verdana; 
+	color: #747474;
+	}
+
+#title2 p{
+	font-size:16px; 
+	font-family:verdana; 
+	color: #33CCFF;
+	}
+#options h2{
+	font-size:12px; 
+	font-family:verdana; 
+	color: #330000 
+}
+
+fieldset{
+	border:1px solid #ccc;
+	padding:10px;
+	text-align:left; 
+	}
+
+legend {
+	font-weight:bold;
+	border:1px solid #ccc;
+	padding:1px 4px; 
+	}
+
+label {
+     width:200px;
+     font-size:12px; 
+	padding:5px 5px; 
+	display:block;
+	float:left;
+	}
+
+label.column {
+	font-size:12px; 
+	font-weight:bold;
+	margin:0;
+	}
+
+.field, .column {
+	width:100%;
+	overflow:auto;
+	}
+
+.field{
+	background:#d6e2e5;
+	}
+
+.column{
+	background:#add6ef;
+	padding:10px 0;
+	}

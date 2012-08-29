@@ -1,0 +1,85 @@
+<!-- Cândida's Script 05-08-2011 -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+
+ <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+                
+ <title class="titleStyle"> Staphylococcus aureus Platform - Welcome </title>
+
+ <link href="style/style.css" rel="stylesheet" type="text/css" media="screen"> 
+
+ <script type="text/javascript" src="js/jquery-1.6.2.js"></script>
+ <script type="text/javascript">
+
+ function validateFormOnSubmit(theForm) {
+  var query="http://204.232.200.16/s3db2/URI.php?key="+$('#pwd').val()+"&format=json&callback=?";
+
+  $.getJSON(query, function(data) {
+   if ($('#user').val()==data[0].login) {
+    window.location = "query.html?key="+$('#pwd').val();
+   }
+   else {
+         alert("Wrong username or password!\n");
+         return false;
+   }
+  });
+ }
+ 
+ </script>
+</head>
+
+<body>
+<!-- start div "header" -->
+<div id="header">
+<a href="home.html"></a>
+<a href="home.html">
+<img id="home" src="images/m_Home.png">
+</a>
+
+<b><i>Staphylococcus aureus</i> Platform</b>
+</div> <!-- end div "header" -->
+
+<br>
+<!-- start div "body" -->
+<br>
+<div id="body" style="color:#0088C2; font:verdana; font-size: 30px; text-align:center; min-height:500px;">
+
+Welcome to <i>Staphylococcus aureus</i> Platform
+
+<br><br>
+
+<img id="staphy.org" src="images/staphy.png" align="center" width="400" height="300">
+
+<br><br>
+
+<div style="color:#0077AA; font:verdana; font-size: 14px;" align="center">
+<form method="POST" id="theForm">
+Username: <input type="text" name="user" id="user">
+<br><br>
+Keyword: <input type="password" name="pwd" id="pwd">
+</form> 
+<br>
+<button onclick="validateFormOnSubmit('theForm')">Enter</button><br />
+</div>
+
+<br>
+<!-- start div "bottom" -->
+<div id="bottom">
+ <b>S3DB - Simple Sloppy Semantic Database </b>
+ <br>
+ <a href="http://www.s3db.org/">
+ <img id="S3DB.org" src="images/link.png"/>
+ </a>
+ <a href="mailto:candida@itqb.unl.pt.com?Subject=Hello%20again">
+ <img id="email" src="images/govdelivery_email_option.png" alt="mail" width="35" height="35" />
+ </a>
+
+ <a href="info.html">
+ <img id="info" src="images/Information-icon.png" width="30" height="30" />
+ </a>
+</div> <!-- end div "bottom" -->
+ 
+</body>
+
+</html>

@@ -1,0 +1,633 @@
+<!-- Cândida's Script 10-05-2011 -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>		
+ <title class="titleStyle"> Staphylococcus aureus Platform - Bartolomeu </title>
+ 
+<link href="Style\style" rel="stylesheet" type="text/css" media="screen">
+ 
+<script type="text/javascript" src="js/jquery-1.6.2.js"></script>
+<script type="text/javascript" src="js/jeditable.js"></script>
+
+<link href="style/CSSmenu.css" rel="stylesheet" type="text/css" media="screen">
+<link href="style/style.css" rel="stylesheet" type="text/css" media="screen">
+
+<script type="text/javascript">
+ 
+$(function() {
+
+	$(".editable_textarea").editable("http://localhost/s3db1/login.php?key=S3Vms5SHotSAOtY", { 
+      type   : 'textarea',
+      submitdata: { _method: "put" },
+      select : true,
+      submit : 'OK',
+      cancel : 'cancel',
+      cssclass : "editable"
+
+	});
+});
+
+//Browser Support Code
+function ajaxFunction(){
+	var ajaxRequest;  // The variable that makes Ajax possible!
+	
+	try{
+		// Opera 8.0+, Firefox, Safari
+		ajaxRequest = new XMLHttpRequest();
+	} catch (e){
+		// Internet Explorer Browsers
+		try{
+			ajaxRequest = new ActiveXObject("Msxml2.XMLHTTP");
+		} catch (e) {
+			try{
+				ajaxRequest = new ActiveXObject("Microsoft.XMLHTTP");
+			} catch (e){
+				// Something went wrong
+				alert("Your browser broke!");
+				return false;
+			}
+		}
+	}
+}
+
+// Create a function that will receive data sent from the server
+ajaxRequest.onreadystatechange = function(){
+	// We still need to write some code here
+}
+
+// Create a function that will receive data sent from the server
+ajaxRequest.onreadystatechange = function(){
+	if(ajaxRequest.readyState == 4){
+		document.editable_textarea.isolate.value = ajaxRequest.responseText;
+	}
+}
+ajaxRequest.open("POST", "http://localhost/s3db1/login.php?key=S3Vms5SHotSAOtY", true);
+ajaxRequest.send(null); 
+
+function drawTable(json,header){
+  var size = header.length;
+  var table = "Quick Find: <input type='text' id='quickfind'><a id='cleanfilters' href='#'>Clear Filters</a><br><table id='results' class='tablesorter' border='0' cellpadding='0' cellspacing='1'><thead><tr>";
+  $.each(header, function(i) {
+   table += "<th>" + header[i] + "</th>";
+  });
+  table += "</tr></thead><tbody>";
+   
+  $.getJSON(json, function(data) {
+   $.each(data, function(i, object){ 
+    table += "<tr>";
+    $.each(object, function(j, obj){ 
+     table += "<td>" + obj + "</td>";
+    });
+    table += "</tr>";
+   });  
+   
+  table += "</tbody>";
+  table += "<tfoot><tr><td colspan=" + size + ">&nbsp;</td></tr></tfoot>";
+  table += "</table>";
+
+function (query) {
+	"http://204.232.200.16/s3db2/sparql.php?key=Staphylococcus&query=SELECT ?slot ?isolate WHERE {?itqbisolate rdfs:label ?isolate .?itqbisolate :R167341 ?Storage .?Storage :R167240 ?Freezer .?Storage :R167240 'Bartolomeu' .?Storage :R167242 ?tower .?Storage :R167242 'A' .?Storage :R167244 ?box .?Storage :R167244 '1' .?Storage :R167246 ?slot . }"; //all the isolates in tower A, box 1, in slots from 1 to 81.
+	});
+
+ 
+</script>
+
+<style type="text/css" >
+
+span.highlight {
+	border-color: #11CAFF;
+	border-style: solid;
+	font:verdana;
+	font-size: 20px;
+	text-align:left;
+	color:#0088C2 
+	}
+
+p {
+	background-color: #99FFCC;
+	border-color:#99FFCC;
+	font-size:16px;
+	font-family:verdana;
+	color: #FFFFFF;
+	text-align: center;
+	}
+
+h1 {
+	font-size:14pt;
+	font-family:verdana;
+	color: #04C7FF;
+	padding-left: 10px;
+	text-align: left;
+	}
+
+table,tr,td {
+	border: 1px solid black;
+	width: 400px;
+	text-align: center;
+	height: 30px
+	}
+
+</style>
+</head>
+
+<body onload="query()">
+
+<!-- start div "header" -->
+<div id="header">
+<a href="home.html"></a>
+<a href="home.html">
+<img id="home" src="images/m_Home.png">
+</a>
+
+<b><i> Staphylococcus aureus </i> Platform </b>
+</div> <!-- end div "header" -->
+
+<br>
+
+<!-- MENU -->
+<div id="menu">
+<ul class="menu">
+
+        <li><a href="dataset.html" title="DataSet"><span>Data Set</span>
+
+        <li><a href="storage.html" title="VirtualREVCO"><span>Virtual REVCO</span>
+                        
+        <li><a href="query.html" title="SPARQL">SPARQL Queries</a></li>
+
+		<li><a href="stats.html" title="Stats"><span>Statistical Analysis</span>
+        
+       	<li><a href="2x2ct.html">&nbsp;Two-way Contingency Table</a></li>
+
+		<li><a href="graphs.html">&nbsp;Graph Generator</a></li>
+	                                                                
+</ul>
+</div>
+<!-- End MENU -->
+<br>
+
+
+<div>
+<p><b> Virtual REVCO - Bartolomeu </b><p></div>
+
+<br>
+
+
+<div id="tower0">
+<!-- Choose tower -->
+<h1><b> Choose the Tower: </h1></b><br />
+
+<div id="tower1" style="padding-left: 50px">
+<table>
+<tr class="Bartolomeu">
+	<td><a onclick="$('#tower0').hide('slow'); $('#box').show('fast');">A</a>
+	</td>
+	<td><a onclick="$('#tower0').hide('slow'); $('#box').show('fast');">D</a>
+	</td>
+	<td><a onclick="$('#tower0').hide('slow'); $('#box').show('fast');">G</a>
+	</td>
+	<td><a onclick="$('#tower0').hide('slow'); $('#box').show('fast');">J</a>
+	</td>
+	<td><a onclick="$('#tower0').hide('slow'); $('#box').show('fast');">M</a>
+	</td>
+	<td><a onclick="$('#tower0').hide('slow'); $('#box').show('fast');">P</a>
+	</td>
+	<td><a onclick="$('#tower0').hide('slow'); $('#box').show('fast');">S</a>
+	</td>
+	<td><a onclick="$('#tower0').hide('slow'); $('#box').show('fast');">V</a>
+	</td>
+</tr>
+
+<tr class="Bartolomeu">
+	<td><a onclick="$('#tower0').hide('slow'); $('#box').show('fast');">B</a>
+	</td>
+	<td><a onclick="$('#tower0').hide('slow'); $('#box').show('fast');">E</a>
+	</td>
+	<td><a onclick="$('#tower0').hide('slow'); $('#box').show('fast');">H</a>
+	</td>
+	<td><a onclick="$('#tower0').hide('slow'); $('#box').show('fast');">K</a>
+	</td>
+	<td><a onclick="$('#tower0').hide('slow'); $('#box').show('fast');">N</a>
+	</td>
+	<td><a onclick="$('#tower0').hide('slow'); $('#box').show('fast');">Q</a>
+	</td>
+	<td><a onclick="$('#tower0').hide('slow'); $('#box').show('fast');">T</a>
+	</td>
+	<td><a onclick="$('#tower0').hide('slow'); $('#box').show('fast');">W</a>
+	</td>
+</tr>
+
+<tr class="Bartolomeu">
+	<td><a onclick="$('#tower0').hide('slow'); $('#box').show('fast');">C</a>
+	</td>
+	<td><a onclick="$('#tower0').hide('slow'); $('#box').show('fast');">F</a>
+	</td>
+	<td><a onclick="$('#tower0').hide('slow'); $('#box').show('fast');">I</a>
+	</td>
+	<td><a onclick="$('#tower0').hide('slow'); $('#box').show('fast');">L</a>
+	</td>
+	<td><a onclick="$('#tower0').hide('slow'); $('#box').show('fast');">O</a>
+	</td>
+	<td><a onclick="$('#tower0').hide('slow'); $('#box').show('fast');">R</a>
+	</td>
+	<td><a onclick="$('#tower0').hide('slow'); $('#box').show('fast');">U</a>
+	</td>
+	<td><a onclick="$('#tower0').hide('slow'); $('#box').show('fast');">X</a>
+	</td>
+</tr>
+</table>
+</div>
+</div>
+
+<br />
+
+<div id="box" style="padding-left: 50px; display: none">
+<!-- Choose Box -->
+<h1><b>Choose the Box:</h1></b><br />
+<div class="box" style="padding-left: 50px; text-align: left">
+<script>document.write("<select>");for(i=0;i<12;i++){var boxVar = 1 + i;
+document.write('<option value=\"' + boxVar + '\">' + boxVar + '</option>');}
+document.write("</select>");</script> <br /><br />
+
+<button onclick="$('#box').hide('fast');$('#slot').show('slow');">Ok</button>
+
+</div>
+</div>
+
+<br>
+<br>
+
+<div id="slot" style="padding-left: 50px; display: none">
+<!-- Choose Slot -->
+<h1><b>Insert the isolates in the slot: </h1></b><br />
+<div style="padding-left: 50px; text-align: left">
+
+<table class="slot">
+<tr>
+<td><h3>ITQB isolate</h3>
+<br>
+<h2>Hello World</h2>
+</td>
+<td><form class="editable_textarea">
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form class="editable_textarea">
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form class="editable_textarea">
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="5" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="6" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="7" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="8" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="9" />
+</form>
+</td>
+</tr>
+<tr>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="10" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="11" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="12" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="13" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="14" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="15" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="16" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="17" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="18" />
+</form>
+</td>
+</tr>
+<tr>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="19" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="20" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="21" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="22" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="23" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="24" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="25" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="26" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="27" />
+</form>
+</td>
+</tr>
+<tr>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="28" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="29" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="30" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="31" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="32" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="33" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="34" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="35" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="36" />
+</form>
+</td>
+</tr>
+<tr>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="37" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="38" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="39" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="40" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="41" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="42" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="43" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="44" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="45" />
+</form>
+</td>
+</tr>
+<tr>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="46" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="47" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="48" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="49" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="50" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="51" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="52" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="53" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="54" />
+</form>
+</td>
+</tr>
+<tr>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="55" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="56" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="57" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="58" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="59" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="60" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="61" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="62" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="63" />
+</form>
+</td>
+</tr>
+<tr>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="64" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="65" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="66" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="67" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="68" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="69" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="70" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="71" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="72" />
+</form>
+</td>
+</tr>
+<tr>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="73" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="74" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="75" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="76" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="77" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="78" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="79" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="80" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" value="81" />
+</form>
+</td>
+</tr>
+</table>
+
+<br>
+
+</div>
+</div>
+
+<br>
+
+<!-- start div "bottom" -->
+<div id="bottom" style="display: block">
+ <b>S3DB - Simple Sloppy Semantic Database </b>
+ <br>
+ <a href="http://www.s3db.org/">
+ <img id="S3DB.org" src="images/link.png"/>
+ </a>
+ <a href="mailto:candida@itqb.unl.pt.com?Subject=Hello%20again">
+ <img id="email" src="images/govdelivery_email_option.png" alt="mail" width="35" height="35" />
+ </a>
+
+ <a href="info.html">
+ <img id="info" src="images/Information-icon.png" width="30" height="30" />
+ </a>
+</div> <!-- end div "bottom" -->
+
+</body>
+</html>

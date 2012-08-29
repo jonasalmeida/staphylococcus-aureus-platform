@@ -1,0 +1,33 @@
+* {
+	margin:0;
+	padding:0;
+	}
+
+#menu {
+	background: #0088C2;
+	display: table;
+	width: 100%;
+	letter-spacing: -.5px
+	}
+
+#menu ul {
+	list-style:none;
+	}
+
+#menu ul li a {
+	display: block;
+	text-decoration: none;
+	font-size:14pt;
+	font-family: verdana;
+	color: #FFFFFF;
+	background: #0088C2;
+	text-decoration: none;
+	float: left;
+	padding: 5px 10px;
+	margin-left: 1px;
+	}
+
+#menu ul li a:hover {
+	color: #04C7FF;
+	background:#99FFCC;
+	}

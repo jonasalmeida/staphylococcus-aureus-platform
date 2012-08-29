@@ -1,0 +1,208 @@
+<!-- Cândida's Script 01-06-2011 -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>		
+ <title class="titleStyle"> Staphylococcus aureus Platform - Virtual REVCO </title>
+
+  <style type ="text/css"> span.highlight { border-color: #11CAFF; border-style: solid; font:verdana; font-size: 20px; text-align:left; color:#0088C2 } </style>
+ 
+<script type="text/javascript" src="js/jquery-1.6.2.js"></script>
+
+<link href="style/CSSmenu.css" rel="stylesheet" type="text/css" media="screen">
+<link href="style/style.css" rel="stylesheet" type="text/css" media="screen">
+
+<style type="text/css" media="all">
+
+ span.highlight {
+	border-color: #11CAFF;
+	border-style: solid;
+	font:verdana;
+	font-size: 20px;
+	text-align:left;
+	color:#0088C2;
+	min-height: 300px
+	}
+
+/* Header */
+#header {
+	background-color:#04C7FF;	
+	font:verdana; 
+	font-size: 30px; 
+	text-align:center; 
+	color:#FFFFFF;
+	}
+
+#body {
+	font:verdana; 
+	font-size: 30px; 
+	text-align:center; 
+	color:#676767;
+	min-height: 300px;
+	}
+
+/* Bottom */
+#bottom {
+	background-color:#11CAFF;	
+	font:verdana;
+	font-size: 30px; 
+	text-align:center; 
+	color:#FFFFFF;
+	}
+
+#title p{
+	background-color: #99FFCC; 
+	border-color:#99FFCC; 
+	font-size:16px; 
+	font-family:verdana; 
+	color: #FFFFFF; 
+	}
+
+#menu ul, li {
+	font: verdana;
+	text-align: center;
+	color:#464646;
+	font-size: 12pt;
+	}
+
+#form {
+	margin: 10px;
+	padding: 10px;
+	text-align: left;
+	}
+
+p {
+	background-color: #99FFCC;
+	border-color:#99FFCC;
+	font-size:16px;
+	font-family:verdana;
+	color: #FFFFFF;
+	text-align: center;
+	}
+
+h1 {
+	font-size:16px;
+	font-family:verdana;
+	color: #04C7FF
+	}
+#id {
+	font: verdana;
+	text-align: left;
+	color:#464646;
+	font-size: 12pt;
+	}
+
+</style>
+
+ <script type="text/javascript">
+
+	function mySub() {
+	var form = $('input[name=freezer]:checked').val();
+
+	if (form == "Bartolomeu") {
+		
+		window.open("StorageBartolomeu.html");
+		
+		}
+	if (form == "Cabral") {
+	
+		window.open("StorageCabral.html");
+		
+		}
+
+	if (form == "Gama") {
+	
+		window.open("StorageGama.html");
+		
+		}
+	
+	if (form == "Tristao") {
+	
+		window.open("StorageTristao.html");
+		
+		}
+
+	}
+
+ </script>
+ 
+  </head>
+
+<body>
+<!-- start div "header" -->
+<div id="header">
+<a href="home.html">
+<img id="home" src="images/m_Home.png">
+</a>
+
+<b><i>Staphylococcus aureus</i> Platform</b>
+</div> <!-- end div "header" -->
+
+<br>
+
+<!-- MENU -->
+<div id="menu">
+<ul class="menu">
+
+		<li><a href="dataset.html" title="DataSet"><span>Data Set</span>
+
+        <li><a href="storage.html" title="VirtualREVCO"><span>Virtual REVCO</span>
+                        
+        <li><a href="query.html" title="SPARQL">SPARQL Queries</a></li>
+
+		<li><a href="stats.html" title="Stats"><span>Statistical Analysis</span>
+        
+       	<li><a href="ctab2x2.html">&nbsp;Two-way Contingency Table</a></li>
+
+		<li><a href="risk.html">&nbsp;Risk Factors Calculator</a></li>
+
+		<li><a href="graphs.html">&nbsp;Graph Generator</a></li>		
+	
+</ul>
+</div>
+<!-- End MENU -->
+
+<br>
+
+<div id="StorageInterface">
+<p><b>Virtual REVCO</b><p></div>
+
+<br />
+
+<!-- Choose freezer -->
+<div id="form"  style="min-height:400px">
+<form id="id">
+<h1><b>&nbsp;Choose the Freezer: [167240 or 167241]</h1></b><br />
+<input type="radio" name="freezer" value="Bartolomeu" /> Bartolomeu<br />
+<input type="radio" name="freezer" value="Cabral" /> Cabral<br />
+<input type="radio" name="freezer" value="Gama" /> Gama<br />
+<input type="radio" name="freezer" value="Tristao" /> Tristão<br />
+</form>
+
+
+<br />
+
+&nbsp;<button onclick="mySub()">Ok</button>
+
+<br />
+
+</div>
+
+<br />
+
+<!-- start div "bottom" -->
+<div id="bottom"><b>S3DB - Simple Sloppy Semantic Database </b>
+<br>
+<a href="http://www.s3db.org/">
+<img id="S3DB.org" src="images/link.png"/>
+</a>
+<a href="mailto:candida@itqb.unl.pt.com?Subject=Hello%20again">
+<img id="email" src="images/govdelivery_email_option.png" alt="mail" width="35" height="35" />
+</a>
+
+<a href="info.html">
+<img id="info" src="images/Information-icon.png" width="30" height="30" />
+</a>
+</div> <!-- end div "bottom" -->
+
+</body>
+</html>

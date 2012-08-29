@@ -1,0 +1,581 @@
+<!-- Cândida's Script 02-06-2011 -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>		
+<title class="titleStyle"> Staphylococcus aureus Platform </title>
+ <link href="Style\style" rel="stylesheet" type="text/css" media="screen">
+ <style type ="text/css"> span.highlight { border-color: #11CAFF; border-style: solid; font:verdana; font-size: 20px; text-align:left; color:#0088C2 } </style>
+ 
+<script type="text/javascript" src="js/jquery-1.6.2.js"></script>
+
+<link href="style/CSSmenu.css" rel="stylesheet" type="text/css" media="screen">
+<link href="style/style.css" rel="stylesheet" type="text/css" media="screen">
+
+
+<!-- javascript -->
+<script type="text/javascript">
+
+// function switchDiv()
+//  this function takes the id of a div
+//  and calls the other functions required
+//  to show that div
+//
+function switchDiv(div_id)
+{
+  var style_sheet = getStyleObject(div_id);
+  if (style_sheet)
+  {
+    hideAll();
+    changeObjectVisibility(div_id,"visible");
+  }
+  else 
+  {
+    alert("Sorry, this only works in browsers that do Dynamic HTML");
+  }
+}
+
+// function hideAll()
+//  hides a bunch of divs
+//
+function hideAll()
+{
+   changeObjectVisibility("tower","hidden");
+   changeObjectVisibility("","hidden");
+   changeObjectVisibility("slot","hidden");
+}
+
+//end of testing
+
+//for the level choice
+	function mySub1() {
+	var form = $('input[name=<select>]:checked').val();
+
+	if (form == "levelVar") {
+		
+		window.open("");
+		
+		}
+
+//for the box choice
+	function mySub1() {
+	var form = $('input[name=<select>]:checked').val();
+
+	if (form == "boxVar") {
+		
+		window.open("");
+		
+		}
+
+</script>
+
+ </head>
+
+ <body>
+<!-- start div "header" -->
+<div id="header">
+<a href="home.html"></a>
+<a href="home.html">
+<img id="home" src="images/m_Home.png">
+</a>
+
+<b><i>Staphylococcus aureus</i> Database</b>
+</div> <!-- end div "header" -->
+
+<br>
+
+<!-- MENU -->
+<div id="menu">
+<ul class="menu">
+
+        <li><a href="dataset.html" title="DataSet"><span>Data Set</span>
+
+        <li><a href="storage.html" title="VirtualREVCO"><span>Virtual REVCO</span>
+                        
+        <li><a href="query.html" title="SPARQL">SPARQL Queries</a></li>
+        
+        <li><a href="statistics.html" title="Stats"><span>Statistical Analysis</span>
+
+		<li><a href="ctab2x2.html" title="contTable"><span>Two-way Contingency Table</span>
+
+        <li><a href="others.html" title="others">Previous Interfaces</a></li>                                   
+</ul>
+</div>
+<!-- End MENU -->
+
+<br>
+
+<div id="tower">
+<style type="text/css" >
+p{background-color: #99FFCC; border-color:#99FFCC; font-size:16px; font-family:verdana; color: #FFFFFF }
+h1{font-size:16px; font-family:verdana; color: #04C7FF }
+</style><p><b>Virtual REVCO - Tristão</b><p></div>
+
+<br>
+
+  <!-- Choose tower -->
+<h1><b>Choose the Tower:</h1></b><br />
+
+</div>
+
+<div id="tower">
+<style type="text/css">
+table tr, td {border:1px solid black; text-align: center; }
+#Tristao {
+	position: center;width: 150px; height: 300px;
+	}
+</style>
+
+<table id="Tristao">
+<tr id="Tristao1">
+	<td>A</a>
+	</td>
+	<td>B
+	</td>
+	<td>C
+	</td>
+	<td>D
+	</td>
+</tr>
+
+<tr id="Tristao2">
+	<td>E
+	</td>
+	<td>F
+	</td>
+	<td>G
+	</td>
+	<td>H
+	</td>
+</tr>
+
+<tr id="Tristao3">
+	<td>I
+	</td>
+	<td>J
+	</td>
+	<td>K
+	</td>
+	<td>L
+	</td>
+</tr>
+</table>
+
+</div>
+
+<br />
+
+<!-- Choose Level -->
+<h1><b>Choose the Level:</h1></b><br />
+<script>document.write("<select>");for(i=0;i<7;i++){var levelVar = 1 + i;
+document.write('<option value=\"' + levelVar + '\">' + levelVar + '</option>');}
+document.write("</select>");</script> <br /><br />
+
+<button onclick="mySub1()">Ok</button>
+
+<br />
+<br />
+
+<!-- Choose Box -->
+<h1><b>Choose the Box:</h1></b><br />
+<script>document.write("<select>");for(i=0;i<4;i++){var boxVar = 1 + i;
+document.write('<option value=\"' + boxVar + '\">' + boxVar + '</option>');}
+document.write("</select>");</script> <br /><br />
+
+<button onclick="mySub()">Ok</button>
+
+<br />
+<br />
+
+<!-- Insert isolate in Slot -->
+<h1><b>Insert the isolates in the slot: </h1></b><br />
+<div id="slot">
+<style type="text/css">
+table,tr,td {border:1px solid black; }
+#isolate {position: center; width: 75px; height: 150px; }
+</style>
+
+<table id="isolate">
+<tr>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+</tr>
+<tr>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+</tr>
+<tr>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+</tr>
+<tr>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+</tr>
+<tr>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+</tr>
+<tr>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+</tr>
+<tr>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+</tr>
+<tr>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+</tr>
+<tr>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+<td><form>
+ITQB isolate: <input type="text" name="isolate" />
+</form>
+</td>
+</tr>
+</table>
+
+<br />
+
+<div id="img" style="text-align:right; width: 90%; ">
+<a href="">
+<img id="edit" src="edit.png" height="50" width="50"/>
+</a>
+
+<a href="">
+<img id="add" src="add.png" height="50" width="50"/>
+</a>
+
+<a href="">
+<img id="delete" src="delete.png" height="50" width="50"/>
+</a>
+
+<a href="">
+<img id="save" src="save.png" height="50" width="50"/>
+</a>
+</div>
+
+<br />
+
+<!-- start div "bottom" -->
+<div id="bottom">
+ <b>S3DB - Simple Sloppy Semantic Database </b>
+ <br>
+ <a href="http://www.s3db.org/">
+ <img id="S3DB.org" src="images/link.png"/>
+ </a>
+ <a href="mailto:candida@itqb.unl.pt.com?Subject=Hello%20again">
+ <img id="email" src="images/govdelivery_email_option.png" alt="mail" width="35" height="35" />
+ </a>
+
+ <a href="info.html">
+ <img id="info" src="images/Information-icon.png" width="30" height="30" />
+ </a>
+</div> <!-- end div "bottom" -->
+
+</body>
+</html>

@@ -1,0 +1,551 @@
+<!-- Cândida's Script 11-10-2011 -->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+
+<title class="titleStyle"> Staphylococcus aureus Database - Antibiogram Query Form </title>
+
+<script type="text/javascript" src="js/jquery-1.6.2.js"></script>
+<script type="text/javascript" src="js/tableSorter.js"></script>
+<script type="text/javascript" src="js/tableFilter.js"></script>
+<script type="text/javascript" src="js/table2CSV.js"></script> 
+
+<link href="style/CSSmenu.css" rel="stylesheet" type="text/css" media="screen">
+<link href="style/table.css" rel="stylesheet" type="text/css" media="screen">
+<link href="style/style.css" rel="stylesheet" type="text/css" media="screen">
+
+<style type="text/css" media="screen">
+
+#loading{
+        margin:0;
+        padding: 0;
+		z-index: -1;
+        width: 900px;
+        height: 200px;
+        border: 1px solid gray;
+        background: url(images/ajax-loader.gif)no-repeat center center;
+		}
+
+</style>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+var variavel = location.search.split("?");
+var variavel1 = variavel[1].split("=");
+var key = variavel1[1];
+
+ $(':checkbox').removeAttr('checked');
+  $(':checkbox').removeAttr('disabled');
+  $("#field").hide(); 
+  $("#field1").hide(); 
+  $("#field2").hide();
+  $("#field3").hide();
+  
+  $("#column").click(function(){
+   $("#field").toggle();
+  });
+ 
+ $("#column1").click(function(){
+   $("#field1").toggle();
+  });
+
+ $("#column2").click(function(){
+   $("#field2").toggle();
+  });
+
+ $("#column3").click(function(){
+   $("#field3").toggle();
+  });
+
+   $('button#aquery').click(function() {
+   var url = "http://204.232.200.16/s3db2/sparql.php?key=Staphylococcus&query=";
+   var sparql = $('form#query').val();
+   var query = (url + sparql + "&format=json&callback=?");
+   formataColuna(query);
+  });
+
+  $('button#query').click(function() {
+   var select = [];
+   var sparql = [];
+   var sparql1 = [];
+   var total = $.find("input[type='checkbox'][name='column']:checked").length-1;
+   $("input[type=checkbox][name='column']:checked").each(function(i){
+    var column = [];
+    column.push($(this).val());
+    
+    var scolumn = column.toString();
+    var array = scolumn.split(",");
+           
+    var label = array[0];
+    var regra = array[1];
+    
+    sparql.push("?isolate" + i + " :" + regra + " ?" + label + " .");
+    
+    var field = [];
+    $("input[type=checkbox][name='"+label+"']:checked").each(function(){
+     field.push($(this).val());
+   });
+      
+     var sfield = field.toString();
+     var array1 = sfield.split(",");
+     var length = array1.length/2;
+                
+     for (n=0; n<length; n++) {
+      select.push("?" + array1[n*2]);
+      var label1 = array1[n*2];
+      var regra1 = array1[n*2+1];
+
+      
+      sparql1.push("?" + label + " :" + regra1 + " ?" + label1 + " .");
+  	}
+      
+     var sparql3 = sparql.join("");
+     var sparql4 = sparql1.join("");
+     
+	if(total == i){
+      var select1 = select.join(" ");
+      var url = "http://204.232.200.16/s3db2/sparql.php?key=Staphylococcus&query=";
+      var query = (url + "SELECT ?Isolate " + select1 + " WHERE {" + " OPTIONAL {" + sparql3 + sparql4 + "} ?isolate0 rdfs:label ?Isolate }&format=json&callback=?");
+      console.log(query);
+      formataColuna(query);
+     }
+    });
+  });	
+ });
+
+ function formataColuna(query){
+  var array = query.split("SELECT");
+  var string = array[1];
+  var array2 = string.split("WHERE");
+  var string2 = array2[0];
+  str = string2.replace(/ /gi,"");
+  str1 = str.replace(/\?/,"");
+  var str2 = str1.split("?");
+  executaQuery(query,str2);
+  $("#loading").show(); 
+  
+}
+
+ function executaQuery(json,header){
+  var size = header.length;
+  var table = "Quick Find: <input type='text' id='quickfind'><a id='cleanfilters' href='#'>Clear Filters</a><br><table id='results' class='tablesorter' border='0' cellpadding='0' cellspacing='1'><thead><tr>";
+  $.each(header, function(i) {
+   table += "<th>" + header[i] + "</th>";
+  });
+  table += "</tr></thead><tbody>";
+   
+  $.getJSON(json, function(data) {
+   $.each(data, function(i, object){ 
+    table += "<tr>";
+    $.each(object, function(j, obj){ 
+     table += "<td>" + obj + "</td>";
+    });
+    table += "</tr>";
+   });  
+   
+  table += "</tbody>";
+  table += "<tfoot><tr><td colspan=" + size + ">&nbsp;</td></tr></tfoot>";
+  table += "</table>";
+  
+  $('#loading').hide();
+  $('form').remove();
+  $('#container').html(table);
+  var options = {
+                additionalFilterTriggers: [$('#quickfind')],
+                clearFiltersControls: [$('#cleanfilters')]
+            };
+  $('#results').tableFilter(options);
+  $('#results').tablesorter({widgets: ['zebra']});
+  
+ });
+}
+
+</script>
+
+ </head>
+
+ <body>
+
+ <!-- start div "header" -->
+<div id="header">
+<a href="home.html">
+<img id="goBack" src="images/back-icon.png" width="40" height="40"; align="left">
+</a>
+<a href="home.html">
+<img id="home" src="images/m_Home.png">
+</a>
+
+<b><i>Staphylococcus aureus</i> Database</b>
+</div> <!-- end div "header" -->
+
+<br>
+
+<!-- MENU -->
+<div id="menu">
+<ul class="menu">
+
+        <li><a href="dataset.html" title="DataSet"><span>Data Set</span>
+
+        <li><a href="storage.html" title="VirtualREVCO"><span>Virtual REVCO</span>
+                        
+        <li><a href="query.html" title="SPARQL">SPARQL Queries</a></li>
+
+		<li><a href="stats.html" title="Stats"><span>Statistical Analysis</span>
+        
+       	<li><a href="2x2ct.html">&nbsp;Two-way Contingency Table</a></li>
+                               
+</ul>
+</div>
+<!-- End MENU -->
+
+<br>
+
+<!-- start div "export" -->
+<div id ="icons" style="padding:10px align:right";>
+<a href="#" onclick="$('#results').TableCSVExport();"><img src="images/excel.png" align="right" width="50" height="50"></a>
+
+<a href="#"><img onclick="window.print();return false;" src="images/Print.png" align="right" width="50" height="50"></a>
+
+</div><!-- end div "export" -->
+
+<!-- start div "other Queries" -->
+<div id ="icons" style="padding:10px align:left";>
+
+<a href="toxins.html"><img onclick="" src="images/toxins.png" align="left" width="150" height="30"></a>
+
+</div><!-- end div "other Queries" -->
+
+<!-- start div "title" -->
+<div id="title">
+<p><b>&nbsp;SPARQL Querying System for Antibiogram</b><p>
+</div> <!-- end div "title" -->
+
+<br>
+
+<!-- start div container-->
+<div id="container">
+
+<!-- start query-->
+<form action="" method="get" id="query"> 
+<fieldset>
+<legend>Antibiogram</legend>
+
+<div class="field">
+<label class="column"><input type="checkbox" name="column" id="column" value="IMT,R167340">&nbsp;Susceptibility</label>
+<div id="field">
+<label><input type="checkbox" name="IMT" value="AmikacinS,R225208">&nbsp;Amikacin</label>
+<label><input type="checkbox" name="IMT" value="Amoxicillin-ClavulanateS,R225217">&nbsp;Amoxicillin-Clavulanate</label>
+<label><input type="checkbox" name="IMT" value="Ampicillin,R116929">&nbsp;Ampicillin</label>
+<label><input type="checkbox" name="IMT" value="Ampicillin/SulfobactamS,R319">&nbsp;Ampicillin/Sulfobactam</label>
+<label><input type="checkbox" name="IMT" value="AztreonamS,R113">&nbsp;Aztreonam</label>
+<label><input type="checkbox" name="IMT" value="BenzylpenicillinS,R524">&nbsp;Benzylpenicillin</label>
+<label><input type="checkbox" name="IMT" value="CeftazidimeS,R119">&nbsp;Ceftazidime</label>
+<label><input type="checkbox" name="IMT" value="CefalotinS,R125">&nbsp;Cefalotin</label>
+<label><input type="checkbox" name="IMT" value="CefazolinS,R131">&nbsp;Cefazolin</label>
+<label><input type="checkbox" name="IMT" value="CefataximeS,R225227">&nbsp;Cefataxime</label>
+<label><input type="checkbox" name="IMT" value="ChloramphenicolS,R116930">&nbsp;Chloramphenicol</label>
+<label><input type="checkbox" name="IMT" value="CiprofloxacinS,R172754">&nbsp;Ciprofloxacin</label>
+<label><input type="checkbox" name="IMT" value="ClarithromycinS,R137">&nbsp;Clarithromycin</label>
+<label><input type="checkbox" name="IMT" value="CephalotinS,">&nbsp;Cephalotin</label>
+<label><input type="checkbox" name="IMT" value="CefepimeS,R143">&nbsp;Cefepime</label>
+<label><input type="checkbox" name="IMT" value="CefoxitinS,R149">&nbsp;Cefoxitin</label>
+<label><input type="checkbox" name="IMT" value="CeftriaxoneS,R155">&nbsp;Ceftriaxone</label>
+<label><input type="checkbox" name="IMT" value="CefuroximeS,R161">&nbsp;Cefuroxime</label>
+<label><input type="checkbox" name="IMT" value="ClindamycinS,R166553">&nbsp;Clindamycin</label>
+<label><input type="checkbox" name="IMT" value="DicloxacillinS,R167">&nbsp;Dicloxacillin</label>
+<label><input type="checkbox" name="IMT" value="DoxycyclineS,R173">&nbsp;Doxycycline</label>
+<label><input type="checkbox" name="IMT" value="ErythromycinS,R166551">&nbsp;Erythromycin</label>
+<label><input type="checkbox" name="IMT" value="FluconazoleS,R179">&nbsp;Fluconazole</label>
+<label><input type="checkbox" name="IMT" value="FlucloxacillinS,R185">&nbsp;Flucloxacillin</label>
+<label><input type="checkbox" name="IMT" value="FosfomycinS,R191">&nbsp;Fosfomycin</label>
+<label><input type="checkbox" name="IMT" value="Fusidic-acidS,R166548">&nbsp;Fusidic-acid</label>
+<label><input type="checkbox" name="IMT" value="GentamycinS,R172756">&nbsp;Gentamycin</label>
+<label><input type="checkbox" name="IMT" value="Gentamycin10S,R116931">&nbsp;Gentamycin 10</label>
+<label><input type="checkbox" name="IMT" value="Gentamycin120S,R201">&nbsp;Gentamycin 120</label>
+<label><input type="checkbox" name="IMT" value="ImipenemS,R225252">&nbsp;Imipenem</label>
+<label><input type="checkbox" name="IMT" value="KanamycinS,R225252">&nbsp;Kanamycin</label>
+<label><input type="checkbox" name="IMT" value="LevofloxacinS,R225259">&nbsp;Levofloxacin</label>
+<label><input type="checkbox" name="IMT" value="LincomycinS,R217">&nbsp;Lincomycin</label>
+<label><input type="checkbox" name="IMT" value="LinezolidS,R225264">&nbsp;Linezolid</label>
+<label><input type="checkbox" name="IMT" value="MeropenemS,R223">&nbsp;Meropenem</label>
+<label><input type="checkbox" name="IMT" value="MetronidazoleS,R229">&nbsp;Metronidazole</label>
+<label><input type="checkbox" name="IMT" value="MethicillinS,R231133">&nbsp;Methicillin</label>
+<label><input type="checkbox" name="IMT" value="MinocyclineS,R234">&nbsp;Minocycline</label>
+<label><input type="checkbox" name="IMT" value="MoxifloxacinS,R240">&nbsp;Moxifloxacin</label>
+<label><input type="checkbox" name="IMT" value="MupirocinS,R166555">&nbsp;Mupirocin</label>
+<label><input type="checkbox" name="IMT" value="NeomycinS,R249">&nbsp;Neomycin</label>
+<label><input type="checkbox" name="IMT" value="NetilmicinS,R255">&nbsp;Netilmicin</label>
+<label><input type="checkbox" name="IMT" value="NitrofurantoinS,R261">&nbsp;Nitrofurantoin</label>
+<label><input type="checkbox" name="IMT" value="NorfloxacinS,R267">&nbsp;Norfloxacin</label>
+<label><input type="checkbox" name="IMT" value="NovobiocinS,R273">&nbsp;Novobiocin</label>
+<label><input type="checkbox" name="IMT" value="OfloxacinS,R279">&nbsp;Ofloxacin</label>
+<label><input type="checkbox" name="IMT" value="OxacillinS,R166546">&nbsp;Oxacillin</label>
+<label><input type="checkbox" name="IMT" value="PenicillinS,R32370">&nbsp;Penicillin</label>
+<label><input type="checkbox" name="IMT" value="PerfloxacinS,R301">&nbsp;Perfloxacin</label>
+<label><input type="checkbox" name="IMT" value="PiperacillinS,R397">&nbsp;Piperacillin</label>
+<label><input type="checkbox" name="IMT" value="PrisitinamycinS,R313">&nbsp;Prisitinamycin</label>
+<label><input type="checkbox" name="IMT" value="Quinupristin/DalfopristinS,R225280">&nbsp;Quinupristin/Dalfopristin</label>
+<label><input type="checkbox" name="IMT" value="RifampinS,R32435">&nbsp;Rifampin</label>
+<label><input type="checkbox" name="IMT" value="SpectinomycinS,R116928">&nbsp;Spectinomycin</label>
+<label><input type="checkbox" name="IMT" value="StreptomycinS,R231134">&nbsp;Streptomycin</label>
+<label><input type="checkbox" name="IMT" value="TeicoplaninS,R116932">&nbsp;Teicoplanin</label>
+<label><input type="checkbox" name="IMT" value="TetracyclinS,R32406">&nbsp;Tetracyclin</label>
+<label><input type="checkbox" name="IMT" value="TobramycinS,R225300">&nbsp;Tobramycin</label>
+<label><input type="checkbox" name="IMT" value="Trimethoprim-sulphamethoxazoleS,R72758">&nbsp;Trimethoprim-sulphamethoxazole</label>
+<label><input type="checkbox" name="IMT" value="VancomycinS,R32807">&nbsp;Vancomycin</label>
+</div></div>
+
+<div class="field">
+<label class="column"><input type="checkbox" name="column" id="column1" value="IMT,R167340">&nbsp;DiskInhibition</label>
+<div id="field1">
+<label><input type="checkbox" name="IMT" value="AmikacinD,R225210">&nbsp;Amikacin</label>
+<label><input type="checkbox" name="IMT" value="Amoxicillin-ClavulanateD,R225217">&nbsp;Amoxicillin-Clavulanate</label>
+<label><input type="checkbox" name="IMT" value="AmpicillinD,R116922">&nbsp;Ampicillin</label>
+<label><input type="checkbox" name="IMT" value="Ampicillin/SulfobactamD,R317">&nbsp;Ampicillin/Sulfobactam</label>
+<label><input type="checkbox" name="IMT" value="AztreonamD,R111">&nbsp;Aztreonam</label>
+<label><input type="checkbox" name="IMT" value="BenzylpenicillinD,R529">&nbsp;Benzylpenicillin</label>
+<label><input type="checkbox" name="IMT" value="CeftazidimeD,R119">&nbsp;Ceftazidime</label>
+<label><input type="checkbox" name="IMT" value="CefalotinD,R123">&nbsp;Cefalotin</label>
+<label><input type="checkbox" name="IMT" value="CefazolineD,R129">&nbsp;Cefazoline</label>
+<label><input type="checkbox" name="IMT" value="CefotaximeD,R225225">&nbsp;Cefotaxime</label>
+<label><input type="checkbox" name="IMT" value="ChloramphenicolD,R116923">&nbsp;Chloramphenicol</label>
+<label><input type="checkbox" name="IMT" value="CiprofloxacinD,R172753">&nbsp;Ciprofloxacin</label>
+<label><input type="checkbox" name="IMT" value="ClarithromycinD,R135">&nbsp;Clarithromycin</label>
+<label><input type="checkbox" name="IMT" value="CefepimeD,R141">&nbsp;Cefepime</label>
+<label><input type="checkbox" name="IMT" value="CefoxitinD,R147">&nbsp;Cefoxitin</label>
+<label><input type="checkbox" name="IMT" value="CeftriaxoneD,R153">&nbsp;Ceftriaxone</label>
+<label><input type="checkbox" name="IMT" value="CefuroximeD,R159">&nbsp;Cefuroxime</label>
+<label><input type="checkbox" name="IMT" value="ClindamycinD,R166552">&nbsp;Clindamycin</label>
+<label><input type="checkbox" name="IMT" value="DicloxacillinD,R165">&nbsp;Dicloxacillin</label>
+<label><input type="checkbox" name="IMT" value="DoxycyclineD,R171">&nbsp;Doxycycline</label>
+<label><input type="checkbox" name="IMT" value="ErythromycinD,R166550">&nbsp;Erythromycin</label>
+<label><input type="checkbox" name="IMT" value="FluconazoleD,R177">&nbsp;Fluconazole</label>
+<label><input type="checkbox" name="IMT" value="FlucloxacillinD,183">&nbsp;Flucloxacillin</label>
+<label><input type="checkbox" name="IMT" value="FosfomycinD,R189">&nbsp;Fosfomycin</label>
+<label><input type="checkbox" name="IMT" value="Fusidic-acidD,R166547">&nbsp;Fusidic-acid</label>
+<label><input type="checkbox" name="IMT" value="GentamycinD,R172755">&nbsp;Gentamycin</label>
+<label><input type="checkbox" name="IMT" value="Gentamycin10D,R116924">&nbsp;Gentamycin 10</label>
+<label><input type="checkbox" name="IMT" value="Gentamycin120D,R200">&nbsp;Gentamycin 120</label>
+<label><input type="checkbox" name="IMT" value="ImipenemD,R225250">&nbsp;Imipenem</label>
+<label><input type="checkbox" name="IMT" value="KanamycinD,R209">&nbsp;Kanamycin</label>
+<label><input type="checkbox" name="IMT" value="LevofloxacinD,R225256">&nbsp;Levofloxacin</label>
+<label><input type="checkbox" name="IMT" value="LincomycinD,R215">&nbsp;Lincomycin</label>
+<label><input type="checkbox" name="IMT" value="LinezolidD,R225309">&nbsp;Linezolid</label>
+<label><input type="checkbox" name="IMT" value="MeropenemD,R221">&nbsp;Meropenem</label>
+<label><input type="checkbox" name="IMT" value="MetronidazoleD,R227">&nbsp;Metronidazole</label>
+<label><input type="checkbox" name="IMT" value="MethicillinD,R231132">&nbsp;Methicillin</label>
+<label><input type="checkbox" name="IMT" value="MinocyclineD,R233">&nbsp;Minocycline</label>
+<label><input type="checkbox" name="IMT" value="MoxifloxacinD,R239">&nbsp;Moxifloxacin</label>
+<label><input type="checkbox" name="IMT" value="MupirocinD,R166554">&nbsp;Mupirocin</label>
+<label><input type="checkbox" name="IMT" value="NeomycinD,R247">&nbsp;Neomycin</label>
+<label><input type="checkbox" name="IMT" value="NetilmicinD,R253">&nbsp;Netilmicin</label>
+<label><input type="checkbox" name="IMT" value="NitrofurantoinD,R259">&nbsp;Nitrofurantoin</label>
+<label><input type="checkbox" name="IMT" value="Norfloxacin,R265">&nbsp;Norfloxacin</label>
+<label><input type="checkbox" name="IMT" value="NovobiocinD,R271">&nbsp;Novobiocin</label>
+<label><input type="checkbox" name="IMT" value="OfloxacinD,R277">&nbsp;Ofloxacin</label>
+<label><input type="checkbox" name="IMT" value="OxacillinD,R166545">&nbsp;Oxacillin</label>
+<label><input type="checkbox" name="IMT" value="PenicillinD,R166544">&nbsp;Penicillin</label>
+<label><input type="checkbox" name="IMT" value="PerfloxacinD,R299">&nbsp;Perfloxacin</label>
+<label><input type="checkbox" name="IMT" value="PiperacillinD,R305">&nbsp;Piperacillin</label>
+<label><input type="checkbox" name="IMT" value="PrisitinamycinD,R311">&nbsp;Prisitinamycin</label>
+<label><input type="checkbox" name="IMT" value="Quinupristin/DalfopristinD,R225310">&nbsp;Quinupristin/Dalfopristin</label>
+<label><input type="checkbox" name="IMT" value="RifampinD,R116925">&nbsp;Rifampin</label>
+<label><input type="checkbox" name="IMT" value="SpectinomycinD,R225311">&nbsp;Spectinomycin</label>
+<label><input type="checkbox" name="IMT" value="StreptomycinD,R323">&nbsp;Streptomycin</label>
+<label><input type="checkbox" name="IMT" value="TeicoplaninD,R116926">&nbsp;Teicoplanin</label>
+<label><input type="checkbox" name="IMT" value="TetracyclinD,R166549">&nbsp;Tetracyclin</label>
+<label><input type="checkbox" name="IMT" value="TobramycinD,R225312">&nbsp;Tobramycin</label>
+<label><input type="checkbox" name="IMT" value="Trimethoprim-sulphamethoxazoleD,R172757">&nbsp;Trimethoprim-sulphamethoxazole</label>
+<label><input type="checkbox" name="IMT" value="VancomycinD,R32807">&nbsp;Vancomycin</label>
+</div></div>
+
+<div class="field">
+<label class="column"><input type="checkbox" name="column" id="column2" value="IMT,R167339">&nbsp;MIC</label>
+<div id="field2">
+<label><input type="checkbox" name="IMT" value="AmikacinM,R225206">&nbsp;Amikacin</label>
+<label><input type="checkbox" name="IMT" value="Amoxicillin-ClavulanateM,R225212">&nbsp;Amoxicillin-Clavulanate</label>
+<label><input type="checkbox" name="IMT" value="AmpicillinM,R225218">&nbsp;Ampicillin</label>
+<label><input type="checkbox" name="IMT" value="Ampicillin/SulfobactamM,R314">&nbsp;Ampicillin/Sulfobactam</label>
+<label><input type="checkbox" name="IMT" value="AztreonamM,R108">&nbsp;Aztreonam</label>
+<label><input type="checkbox" name="IMT" value="BenzylpenicillinM,R526">&nbsp;Benzylpenicillin</label>
+<label><input type="checkbox" name="IMT" value="CeftazidimeM,R114">&nbsp;Ceftazidime</label>
+<label><input type="checkbox" name="IMT" value="CefalotinM,R120">&nbsp;Cefalotin</label>
+<label><input type="checkbox" name="IMT" value="CefazolineM,R126">&nbsp;Cefazoline</label>
+<label><input type="checkbox" name="IMT" value="CefotaximeM,R225222">&nbsp;Cefotaxime</label>
+<label><input type="checkbox" name="IMT" value="ChloramphenicolM,R225228">&nbsp;Chloramphenicol</label>
+<label><input type="checkbox" name="IMT" value="CiprofloxacinM,R225232">&nbsp;Ciprofloxacin</label>
+<label><input type="checkbox" name="IMT" value="ClarithromycinM,R132">&nbsp;Clarithromycin</label>
+
+<label><input type="checkbox" name="IMT" value="CefepimeM,R138">&nbsp;Cefepime</label>
+<label><input type="checkbox" name="IMT" value="CefoxitinM,R144">&nbsp;Cefoxitin</label>
+<label><input type="checkbox" name="IMT" value="CeftriaxoneM,R150">&nbsp;Ceftriaxone</label>
+<label><input type="checkbox" name="IMT" value="CefuroximeM,R156">&nbsp;Cefuroxime</label>
+<label><input type="checkbox" name="IMT" value="ClindamycinM,R225236">&nbsp;Clindamycin</label>
+<label><input type="checkbox" name="IMT" value="DicloxacillinM,R162">&nbsp;Dicloxacillin</label>
+<label><input type="checkbox" name="IMT" value="DoxycyclineM,R168">&nbsp;Doxycycline</label>
+<label><input type="checkbox" name="IMT" value="ErythromycinM,R225240">&nbsp;Erythromycin</label>
+<label><input type="checkbox" name="IMT" value="FluconazoleM,R174">&nbsp;Fluconazole</label>
+<label><input type="checkbox" name="IMT" value="FlucloxacillinM,R180">&nbsp;Flucloxacillin</label>
+<label><input type="checkbox" name="IMT" value="FosfomycinM,R186">&nbsp;Fosfomycin</label>
+<label><input type="checkbox" name="IMT" value="Fusidic-acidM,R192">&nbsp;Fusidic-acid</label>
+<label><input type="checkbox" name="IMT" value="GentamycinM,R225243">&nbsp;Gentamycin</label>
+<label><input type="checkbox" name="IMT" value="Gentamycin10M,R196">&nbsp;Gentamycin 10</label>
+<label><input type="checkbox" name="IMT" value="Gentamycin120M,R202">&nbsp;Gentamycin 120</label>
+<label><input type="checkbox" name="IMT" value="ImipenemM,R225247">&nbsp;Imipenem</label>
+<label><input type="checkbox" name="IMT" value="KanamycinM,R206">&nbsp;Kanamycin</label>
+<label><input type="checkbox" name="IMT" value="LevofloxacinM,R225253">&nbsp;Levofloxacin</label>
+<label><input type="checkbox" name="IMT" value="LincomycinM,R212">&nbsp;Lincomycin</label>
+<label><input type="checkbox" name="IMT" value="LinezolidM,R225260">&nbsp;Linezolid</label>
+<label><input type="checkbox" name="IMT" value="MeropenemM,R218">&nbsp;Meropenem</label>
+<label><input type="checkbox" name="IMT" value="MetronidazoleM,R224">&nbsp;Metronidazole</label>
+<label><input type="checkbox" name="IMT" value="MethicillinM,R231130">&nbsp;Methicillin</label>
+<label><input type="checkbox" name="IMT" value="MinocyclineM,R235">&nbsp;Minocycline</label>
+<label><input type="checkbox" name="IMT" value="MoxifloxacinM,R241">&nbsp;Moxifloxacin</label>
+<label><input type="checkbox" name="IMT" value="MupirocinM,R29238">&nbsp;Mupirocin</label>
+<label><input type="checkbox" name="IMT" value="NeomycinM,R244">&nbsp;Neomycin</label>
+<label><input type="checkbox" name="IMT" value="NetilmicinM,R250">&nbsp;Netilmicin</label>
+<label><input type="checkbox" name="IMT" value="NitrofurantoinM,R256">&nbsp;Nitrofurantoin</label>
+<label><input type="checkbox" name="IMT" value="NorfloxacinM,R262">&nbsp;Norfloxacin</label>
+<label><input type="checkbox" name="IMT" value="NovobiocinM,R268">&nbsp;Novobiocin</label>
+<label><input type="checkbox" name="IMT" value="OfloxacinM,R274">&nbsp;Ofloxacin</label>
+<label><input type="checkbox" name="IMT" value="OxacillinM,R116917">&nbsp;Oxacillin</label>
+<label><input type="checkbox" name="IMT" value="PenicillinM,R225270">&nbsp;Penicillin</label>
+<label><input type="checkbox" name="IMT" value="PerfloxacinM,R296">&nbsp;Perfloxacin</label>
+<label><input type="checkbox" name="IMT" value="PiperacillinM,R302">&nbsp;Piperacillin</label>
+<label><input type="checkbox" name="IMT" value="PrisitinamycinM,R308">&nbsp;Prisitinamycin</label>
+<label><input type="checkbox" name="IMT" value="Quinupristin/DalfopristinM,R225274">&nbsp;Quinupristin/Dalfopristin</label>
+<label><input type="checkbox" name="IMT" value="Quinupristin/Dalfopristin20hM,R225275">&nbsp;Quinupristin/Dalfopristin 20h</label>
+<label><input type="checkbox" name="IMT" value="Quinupristin/Dalfopristin24hdil1M,R225276">&nbsp;Quinupristin/Dalfopristin 24h dil 1</label>
+<label><input type="checkbox" name="IMT" value="Quinupristin/Dalfopristin24hdil2M,R280">&nbsp;Quinupristin/Dalfopristin 24h dil 2</label>
+<label><input type="checkbox" name="IMT" value="Quinupristin/Dalfopristin24hdil3M,R281">&nbsp;Quinupristin/Dalfopristin 24h dil 3</label>
+<label><input type="checkbox" name="IMT" value="Quinupristin/Dalfopristin24hdil4M,R282">&nbsp;Quinupristin/Dalfopristin 24h dil 4</label>
+<label><input type="checkbox" name="IMT" value="Quinupristin/Dalfopristin24hdil5M,R283">&nbsp;Quinupristin/Dalfopristin 24h dil 5</label>
+<label><input type="checkbox" name="IMT" value="Quinupristin/Dalfopristin24hdil6M,R284">&nbsp;Quinupristin/Dalfopristin 24h dil 6</label>
+<label><input type="checkbox" name="IMT" value="Quinupristin/Dalfopristin24hdil7M,R285">&nbsp;Quinupristin/Dalfopristin 24h dil 7</label>
+<label><input type="checkbox" name="IMT" value="Quinupristin/Dalfopristin24hdil8M,R286">&nbsp;Quinupristin/Dalfopristin 24h dil 8</label>
+<label><input type="checkbox" name="IMT" value="Quinupristin/Dalfopristin24hdil9M,R287">&nbsp;Quinupristin/Dalfopristin 24h dil 9</label>
+<label><input type="checkbox" name="IMT" value="Quinupristin/Dalfopristin48hdil1M,R225277">&nbsp;Quinupristin/Dalfopristin 48h dil 1</label>
+<label><input type="checkbox" name="IMT" value="Quinupristin/Dalfopristin48hdil2M,R288">&nbsp;Quinupristin/Dalfopristin 48h dil 2</label>
+<label><input type="checkbox" name="IMT" value="Quinupristin/Dalfopristin48hdil3M,R289">&nbsp;Quinupristin/Dalfopristin 48h dil 3</label>
+<label><input type="checkbox" name="IMT" value="Quinupristin/Dalfopristin48hdil4M,R290">&nbsp;Quinupristin/Dalfopristin 48h dil 4</label>
+<label><input type="checkbox" name="IMT" value="Quinupristin/Dalfopristin48hdil5M,R291">&nbsp;Quinupristin/Dalfopristin 48h dil 5</label>
+<label><input type="checkbox" name="IMT" value="Quinupristin/Dalfopristin48hdil6M,R292">&nbsp;Quinupristin/Dalfopristin 48h dil 6</label>
+<label><input type="checkbox" name="IMT" value="Quinupristin/Dalfopristin48hdil7M,R293">&nbsp;Quinupristin/Dalfopristin 48h dil 7</label>
+<label><input type="checkbox" name="IMT" value="Quinupristin/Dalfopristin48hdil8M,R294">&nbsp;Quinupristin/Dalfopristin 48h dil 8</label>
+<label><input type="checkbox" name="IMT" value="Quinupristin/Dalfopristin48hdil9M,R295">&nbsp;Quinupristin/Dalfopristin 48h dil 9</label>
+<label><input type="checkbox" name="IMT" value="RifampinM,R225281">&nbsp;Rifampin</label>
+<label><input type="checkbox" name="IMT" value="SpectinomycinM,R225284">&nbsp;Spectinomycin</label>
+<label><input type="checkbox" name="IMT" value="StreptomycinM,R320">&nbsp;Streptomycin</label>
+<label><input type="checkbox" name="IMT" value="TeicoplaninM,R225288">&nbsp;Teicoplanin</label>
+<label><input type="checkbox" name="IMT" value="TetracyclinM,R225292">&nbsp;Tetracyclin</label>
+<label><input type="checkbox" name="IMT" value="TobramycinM,R225296">&nbsp;Tobramycin</label>
+<label><input type="checkbox" name="IMT" value="Trimethoprim-sulphamethoxazoleM,R225301">&nbsp;Trimethoprim-sulphamethoxazole</label>
+<label><input type="checkbox" name="IMT" value="VancomycinM,R225305">&nbsp;Vancomycin</label>
+</div></div>
+
+<div class="field">
+<label class="column"><input type="checkbox" name="column" id="column3" value="IMT,R167339">&nbsp;Method</label>
+<div id="field3">
+<label><input type="checkbox" name="IMT" value="AmikacinT,R225207">&nbsp;Amikacin</label>
+<label><input type="checkbox" name="IMT" value="Amoxicillin-ClavulanateT,R225213">&nbsp;Amoxicillin-Clavulanate</label>
+<label><input type="checkbox" name="IMT" value="AmpicillinT,R225219">&nbsp;Ampicillin</label>
+<label><input type="checkbox" name="IMT" value="Ampicillin/SulfobactamT,R315">&nbsp;Ampicillin/Sulfobactam</label>
+<label><input type="checkbox" name="IMT" value="AztreonamT,R109">&nbsp;Aztreonam</label>
+<label><input type="checkbox" name="IMT" value="BenzylpenicillinT,R527">&nbsp;Benzylpenicillin</label>
+<label><input type="checkbox" name="IMT" value="CeftazidimeT,R115">&nbsp;Ceftazidime</label>
+<label><input type="checkbox" name="IMT" value="CefalotinT,R121">&nbsp;Cefalotin</label>
+<label><input type="checkbox" name="IMT" value="CefazolineT,R127">&nbsp;Cefazoline</label>
+<label><input type="checkbox" name="IMT" value="CefotaximeT,R225223">&nbsp;Cefotaxime</label>
+<label><input type="checkbox" name="IMT" value="ChloramphenicolT,R225229">&nbsp;Chloramphenicol</label>
+<label><input type="checkbox" name="IMT" value="CiprofloxacinT,R225233">&nbsp;Ciprofloxacin</label>
+<label><input type="checkbox" name="IMT" value="ClarithromycinT,R133">&nbsp;Clarithromycin</label>
+<label><input type="checkbox" name="IMT" value="CefepimeT,R139">&nbsp;Cefepime</label>
+<label><input type="checkbox" name="IMT" value="CefoxitinT,R145">&nbsp;Cefoxitin</label>
+<label><input type="checkbox" name="IMT" value="CeftriaxoneT,R151">&nbsp;Ceftriaxone</label>
+<label><input type="checkbox" name="IMT" value="CefuroximeT,R157">&nbsp;Cefuroxime</label>
+<label><input type="checkbox" name="IMT" value="ClindamycinT,R225237">&nbsp;Clindamycin</label>
+<label><input type="checkbox" name="IMT" value="DicloxacillinT,R163">&nbsp;Dicloxacillin</label>
+<label><input type="checkbox" name="IMT" value="DoxycyclineT,R169">&nbsp;Doxycycline</label>
+<label><input type="checkbox" name="IMT" value="ErythromycinT,R225241">&nbsp;Erythromycin</label>
+<label><input type="checkbox" name="IMT" value="FluconazoleT,R175">&nbsp;Fluconazole</label>
+<label><input type="checkbox" name="IMT" value="FlucloxacillinT,R181">&nbsp;Flucloxacillin</label>
+<label><input type="checkbox" name="IMT" value="FosfomycinT,R187">&nbsp;Fosfomycin</label>
+<label><input type="checkbox" name="IMT" value="Fusidic-acidT,R193">&nbsp;Fusidic-acid</label>
+<label><input type="checkbox" name="IMT" value="GentamycinT,R225244">&nbsp;Gentamycin</label>
+<label><input type="checkbox" name="IMT" value="Gentamycin10T,R197">&nbsp;Gentamycin 10</label>
+<label><input type="checkbox" name="IMT" value="Gentamycin120T,R203">&nbsp;Gentamycin 120</label>
+<label><input type="checkbox" name="IMT" value="ImipenemT,R225248">&nbsp;Imipenem</label>
+<label><input type="checkbox" name="IMT" value="KanamycinT,R207">&nbsp;Kanamycin</label>
+<label><input type="checkbox" name="IMT" value="LevofloxacinT,R225254">&nbsp;Levofloxacin</label>
+<label><input type="checkbox" name="IMT" value="LincomycinT,R213">&nbsp;Lincomycin</label>
+<label><input type="checkbox" name="IMT" value="LinezolidT,R225261">&nbsp;Linezolid</label>
+<label><input type="checkbox" name="IMT" value="MeropenemT,R219">&nbsp;Meropenem</label>
+<label><input type="checkbox" name="IMT" value="MetronidazoleT,R225">&nbsp;Metronidazole</label>
+<label><input type="checkbox" name="IMT" value="MethicillinT,R231131">&nbsp;Methicillin</label>
+<label><input type="checkbox" name="IMT" value="MinocyclineT,R232">&nbsp;Minocycline</label>
+<label><input type="checkbox" name="IMT" value="MoxifloxacinT,R238">&nbsp;Moxifloxacin</label>
+<label><input type="checkbox" name="IMT" value="MupirocinT,R225265">&nbsp;Mupirocin</label>
+<label><input type="checkbox" name="IMT" value="NeomycinT,R245">&nbsp;Neomycin</label>
+<label><input type="checkbox" name="IMT" value="NetilmicinT,R251">&nbsp;Netilmicin</label>
+<label><input type="checkbox" name="IMT" value="NitrofurantoinT,R257">&nbsp;Nitrofurantoin</label>
+<label><input type="checkbox" name="IMT" value="NorfloxacinT,R263">&nbsp;Norfloxacin</label>
+<label><input type="checkbox" name="IMT" value="NovobiocinT,R269">&nbsp;Novobiocin</label>
+<label><input type="checkbox" name="IMT" value="OfloxacinT,R275">&nbsp;Ofloxacin</label>
+<label><input type="checkbox" name="IMT" value="OxacillinT,R225267">&nbsp;Oxacillin</label>
+<label><input type="checkbox" name="IMT" value="PenicillinT,R225271">&nbsp;Penicillin</label>
+<label><input type="checkbox" name="IMT" value="PerfloxacinT,R297">&nbsp;Perfloxacin</label>
+<label><input type="checkbox" name="IMT" value="PiperacillinT,R303">&nbsp;Piperacillin</label>
+<label><input type="checkbox" name="IMT" value="PrisitinamycinT,R309">&nbsp;Prisitinamycin</label>
+<label><input type="checkbox" name="IMT" value="Quinupristin/DalfopristinT,R225278">&nbsp;Quinupristin/Dalfopristin</label>
+<label><input type="checkbox" name="IMT" value="RifampinT,R225282">&nbsp;Rifampin</label>
+<label><input type="checkbox" name="IMT" value="SpectinomycinT,R225285">&nbsp;Spectinomycin</label>
+<label><input type="checkbox" name="IMT" value="StreptomycinT,R321">&nbsp;Streptomycin</label>
+<label><input type="checkbox" name="IMT" value="TeicoplaninT,R225289">&nbsp;Teicoplanin</label>
+<label><input type="checkbox" name="IMT" value="TetracyclinT,R225293">&nbsp;Tetracyclin</label>
+<label><input type="checkbox" name="IMT" value="TobramycinT,R225297">&nbsp;Tobramycin</label>
+<label><input type="checkbox" name="IMT" value="Trimethoprim-sulphamethoxazoleT,R225302">&nbsp;Trimethoprim-sulphamethoxazole</label>
+<label><input type="checkbox" name="IMT" value="VancomycinT,R225306">&nbsp;Vancomycin</label>
+</div></div>
+
+<br>
+
+<button type="button" id="query" style="position: middle"> Send Query </button>
+<input type="submit" value="Clear query" onclick="clear()"id="query" style="position: middle">
+
+</fieldset>
+</form>
+
+<!-- end query-->
+
+<div id="loading" style="display:none;"></div>
+
+
+</div>
+
+<br>
+<br>
+
+<!-- start div "bottom" -->
+<div id="bottom">
+ <b>S3DB - Simple Sloppy Semantic Database </b>
+ <br>
+ <a href="http://www.s3db.org/">
+ <img id="S3DB.org" src="images/link.png"/>
+ </a>
+ <a href="mailto:candida@itqb.unl.pt.com?Subject=Hello%20again">
+ <img id="email" src="images/govdelivery_email_option.png" alt="mail" width="35" height="35" />
+ </a>
+
+ <a href="info.html">
+ <img id="info" src="images/Information-icon.png" width="30" height="30" />
+ </a>
+</div> <!-- end div "bottom" -->
+
+
+ </body>
+</html>

@@ -1,0 +1,235 @@
+<!-- Cândida's Script 12-10-2011 -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <title> Staphylococcus aureus Database - Data Set </title>
+
+  <link href="style/CSSmenu.css" rel="stylesheet" type="text/css" media="screen">
+  <link href="style/style.css" rel="stylesheet" type="text/css" media="screen">
+  <link href="style/style1.css" rel="stylesheet" type="text/css" media="all">
+  <link href="style/treeview.css" rel="stylesheet" type="text/css" media="screen">
+
+  <script type="text/javascript" src="js/jquery-1.6.2.js"></script>
+  <script type="text/javascript" src="js/treeview.js"></script>
+  <script type="text/javascript" src="js/prototype.js"></script>
+  <script type="text/javascript" src="js/fabtabulous.js"></script>
+  <script type="text/javascript" src="js/tablekit.js"></script>
+    
+<style>
+a{
+	text-decoration:none;
+	color:#057fac;
+}
+a:hover{
+	text-decoration:none;
+	color:#999;
+}
+
+</style>
+
+<script type="text/javascript">
+ jQuery.noConflict();
+</script>
+
+
+<script type="text/javascript">
+ var variavel = location.search.split("?");
+ var variavel1 = variavel[1].split("=");
+ var key = variavel1[1];
+ 
+function executaQuery(){
+ var jsonCol = "http://204.232.200.16/s3db2/sparql.php?key="+key+"&query=SELECT ?Object ?ObjectLabel ?Rule WHERE { ?Rule rdfs:subClassOf :P167222 .?Rule rdf:subject :C167332 .?Rule rdf:object ?Object .?Object rdfs:label ?ObjectLabel . }&format=json&callback=?";
+ var m = "<p style='font-family:verdana;font-size:16px;'><b>Choose a collection:</b></p><ul id='sitemap'>";
+ 
+jQuery(document).ready(function(){
+ jQuery.getJSON(jsonCol, function(data) {
+  jQuery.each(data, function(i, object){
+   var col = object.Object.split("C");
+   var collection = col[1];
+   var rule = object.Rule.split("R");
+   m += "<li><a id='C" +collection+ ",R" + rule[1] + "' href='#'>" +object.ObjectLabel+ "</a></li>";
+  });
+  
+ m += "</ul>"; 
+ 
+ jQuery('#content').html(m);
+  	
+ jQuery('a').bind('click', function (evt) 
+  { 
+   var arrayRule = [];
+   string = jQuery(this).attr("id"); 
+   var array = string.split(",");
+   var jsonColumn = "http://204.232.200.16/s3db2/sparql.php?key="+key+"&query=SELECT ?Rule ?Column WHERE { ?Rule rdfs:subClassOf :P167222 .?Rule rdf:subject :" + array[0] +" .?Rule rdf:object ?Column . }&format=json&callback=?";
+   
+   jQuery.getJSON(jsonColumn, function(data) {
+    jQuery.each(data, function(i, object){
+     var rule = object.Rule.split("R");
+     arrayRule.push("R"+rule[1]); 
+     arrayRule.push(object.Column);
+    });
+
+    var url = "http://204.232.200.16/s3db2/sparql.php?key="+key+"&query=";
+    var isolate ="{?itqbisolate :" + array[1] + " ?Label . ";
+    var qfinal = " ?itqbisolate rdfs:label ?Isolate }&format=json&callback=?";
+    var length = arrayRule.length/2;
+    var size = length + 3;
+    var select = [];
+    var sparql = [];
+    var column = [];
+    var field = [];
+        
+    for (n=0; n<length; n++) {
+     var rule = arrayRule[n*2];
+     column.push(arrayRule[n*2+1]);
+     select.push("?field" + n);
+     sparql.push("OPTIONAL {?Label" + " :" + rule + " ?field" + n + " . }"); 
+    }
+    
+
+    var select1 = select.join(" ");
+    var sparql1 = sparql.join(" ");
+    var jsonData = url + "SELECT ?itqbisolate ?Isolate " + select1 + " WHERE " + isolate + sparql1 + qfinal;
+
+    console.log(jsonData);
+    jQuery('#dataset').remove();
+
+    var table = "<table id='dataset' class='sortable editable'><thead><tr><th class='noedit'></th><th id='IsolateID'>Isolate ID</th><th class='sortfirstdesc' id='Isolate'>Isolate Name</th>";
+
+    jQuery.each(column, function(i) {
+     table += "<th id='"+ select[i] +"'>" + column[i] + "</th>";
+    });
+    table += "</tr></thead><tbody>";
+   
+    jQuery.getJSON(jsonData, function(data) {
+     jQuery.each(data, function(i, object){ 
+      table += "<tr><td><INPUT type='checkbox' name='chk'></td>";
+      jQuery.each(object, function(j, obj){ 
+       table += "<td>" + obj + "</td>";
+      });
+      table += "</tr>";
+    });  
+   
+    table += "</tbody>";
+    table += "<tfoot><tr><td colspan=" + size + ">&nbsp;</td></tr></tfoot>";
+    table += "</table>";
+    
+    jQuery('#center').append(table);
+    var comments_table = new TableKit('dataset', {});
+    
+    }); //jsonData
+   }); //jsonRule
+ });
+ });
+});
+}
+
+function insertRow(tableID) {
+ var table = document.getElementById(tableID);
+ document.getElementById(tableID).deleteTFoot();
+ var numOfRows = table.rows.length;
+ var numOfCols = table.rows[numOfRows-2].cells.length;
+ var newRow = table.insertRow(numOfRows);
+ for (var j = 0; j < numOfCols; j++) {
+  if(j==0){
+   newCell = newRow.insertCell(j);
+   newCell.innerHTML = "<INPUT type='checkbox' name='chk'>"; 
+  }
+  else{
+   newCell = newRow.insertCell(j);
+   newCell.innerHTML = "New Cell";
+  }
+ }
+} 
+
+function deleteRow(tableID) {
+ var table = document.getElementById(tableID);
+ var rowCount = table.rows.length;
+ for(var i=0; i<rowCount; i++) {
+  var row = table.rows[i];
+  var chkbox = row.cells[0].childNodes[0];
+  if(null != chkbox && true == chkbox.checked) {
+   table.deleteRow(i);
+   rowCount--;
+   i--;
+  }
+ }
+}
+
+</script>
+ 
+</head>
+
+<body onload="executaQuery()">
+
+<!-- start div "header" -->
+<div id="header">
+<a href="home.html">
+<img id="home" src="images/m_Home.png"/>
+</a>
+
+<b><i>Staphylococcus aureus</i> Database</b>
+</div> 
+<!-- end div "header" -->
+
+<br>
+
+<!-- MENU -->
+<div id="menu">
+<ul class="menu">
+ <script>  
+  document.write("<li><a href='dataset.html?key="+key+"' title='DataSet'><span>Data Set</span></a></li>");
+  document.write("<li><a href='storage.html?key="+key+"' title='VirtualREVCO'><span>Virtual REVCO</span></a></li>");
+  document.write("<li><a href='query.html?key="+key+"' title='SPARQL'>SPARQL Queries</a></li>");
+  document.write("<li><a href='stats.html?key="+key+"' title='Stats'><span>Statistical Analysis</span></a></li>");
+  document.write("<li><a href='2x2ct.html?key="+key+"'>&nbsp;Two-way Contingency Table</a></li>");  
+ </script>    
+	
+</ul>
+</div>
+<!-- End MENU -->
+
+<br>
+
+<!-- start div "container" -->
+<div id="container">
+
+<!-- start div "title" -->
+<div id="title"><p><b>Staphylococcus aureus Dataset</b><p></div>
+<!-- end div "title" -->
+
+<br>
+
+<div id="left">
+ <div id="content">
+		
+ </div><!-- end div "content" -->
+</div><!-- end div "left" -->
+
+<!-- start div "center" -->
+<div id="center">
+<br><br>
+<INPUT type="button" value="Insert Row" onclick="insertRow('dataset')">
+<INPUT type="button" value="Delete Row" onclick="deleteRow('dataset')">
+<br><br>
+				
+</div><!-- end div "center" -->
+
+</div><!-- end div "container" -->
+
+<!-- start div "bottom" -->
+<div id="bottom"><b>S3DB - Simple Sloppy Semantic Database </b>
+<br>
+<a href="http://www.s3db.org/">
+<img id="S3DB.org" src="images/link.png"/>
+</a>
+<a href="mailto:candida@itqb.unl.pt.com?Subject=Hello%20again">
+<img id="email" src="images/govdelivery_email_option.png" alt="mail" width="35" height="35">
+</a>
+
+<a href="info.html">
+<img id="info" src="images/Information-icon.png" width="30" height="30">
+</a>
+</div> <!-- end div "bottom" -->
+ 
+ </body>
+</html>

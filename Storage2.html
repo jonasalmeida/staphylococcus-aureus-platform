@@ -1,0 +1,388 @@
+<!-- Cândida's Script 10-05-2011 -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>		
+ <title class="titleStyle"> Staphylococcus aureus Platform </title>
+
+<script type="text/javascript" src="js/jquery-1.6.2.js"></script>
+
+<link href="style/CSSmenu.css" rel="stylesheet" type="text/css" media="screen">
+<link href="style/style.css" rel="stylesheet" type="text/css" media="screen">
+
+  <link href="Style\style.css" rel="stylesheet" type="text/css" media="screen">
+ <style type ="text/css">
+ 
+ #freezer h2 {
+	margin: 10px;
+	padding:10px;
+	font:verdana;
+	font-size: 20px;
+	text-align:left;
+	}
+
+#form {
+	text-align: left;
+	padding-left: 50px;
+	}
+
+ </style>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+	var textDefault = $('#form label').remove().text();
+	$('#insert')
+	.val(textDefault)
+	.css('color', '#999')
+		.focus(function(){
+			if ($(this).val() == textDefault){
+			$(this).css('color', '').val('');
+			}
+		}).blur(function(){
+			if ($(this).val() == '' ){
+			$(this).val(textDefault).css('color', '#999');
+			}
+		});
+	});
+
+	$(document).ready(function() {
+		$('#save').click(function() {
+		});
+	});
+
+	var ajaxSubmit = function(formEl) {
+		// fetch where we want to submit the form to
+        var url = $(formEl).attr('action');
+
+        // fetch the data for the form
+        var data = $(formEl).serializeArray();
+
+        // setup the ajax request
+        $.ajax({
+            url: "http://localhost/s3db1/login.php?key=S3Vms5SHotSAOtY&query=",
+            data: data,
+            dataType: 'json',
+            success: function() {
+				if(rsp.success) {
+					alert('form has been posted successfully');
+                }
+            }
+         });
+
+		// return false so the form does not actually
+        // submit to the page
+        return false;
+    }
+
+<?php
+
+function post($key) {
+    if (isset($_POST[$key]))
+        return $_POST[$key];
+    return false;
+}
+$username = ;
+$key = ;
+// setup the database connect
+$cxn = mysql_connect('http://204.232.200.16/s3db2/', '$username', '$key');
+if (!$cxn)
+    exit;
+mysql_select_db('S3DB', $cxn);
+
+// check if we can get hold of the form field
+if (!post('my_value'))
+    exit;
+
+// let make sure we escape the data
+$val = mysql_real_escape_string(post('my_value'), $cxn);
+
+// lets setup our insert query
+$sql = sprintf("INSERT INTO %s (s3db Rule goes here) VALUES '%s';",
+                'C167233', //Storage ID
+                $val
+);
+
+// lets run our query
+$result = mysql_query($sql, $cxn);
+
+// setup our response "object"
+$resp = new stdClass();
+$resp->success = false;
+if($result) {
+    $resp->success = true;
+}
+
+print json_encode($resp);
+?>
+
+	jQuery(document).ready(function(){
+		var url = "http://localhost/s3db1/login.php?key=S3Vms5SHotSAOtY&query=";
+	});
+
+</script>
+ 
+  </head>
+
+<body>
+
+<!-- start div "header" -->
+<div id="header">
+<a href="home.html"></a>
+<a href="home.html">
+<img id="home" src="images/m_Home.png">
+</a>
+
+<b><i>Staphylococcus aureus</i> Database</b>
+</div> <!-- end div "header" -->
+
+<br>
+
+<!-- MENU -->
+<div id="menu">
+<ul class="menu">
+
+        <li><a href="dataset.html" title="DataSet"><span>Data Set</span>
+
+        <li><a href="storage.html" title="VirtualREVCO"><span>Virtual REVCO</span>
+                        
+        <li><a href="query.html" title="SPARQL">SPARQL Queries</a></li>
+
+		<li><a href="stats.html" title="Stats"><span>Statistical Analysis</span>
+        
+       	<li><a href="2x2ct.html">&nbsp;Two-way Contingency Table</a></li>
+
+		<li><a href="graphs.html">&nbsp;Graph Generator</a></li>                              
+</ul>
+</div>
+<!-- End MENU -->
+
+<br>
+
+<div id="StorageInterface">
+<style type="text/css">
+p{background-color: #99FFCC; border-color:#99FFCC; font-size:16px; font-family:verdana; color: #FFFFFF }
+h2{font-size:16px; font-family:verdana; color: #04C7FF }
+</style>
+
+<p><b>Virtual REVCO</b><p>
+
+</div>
+
+<br>
+
+<!-- Freezer options -->
+<div id="freezer">
+<h2><b>REVCO Freezer (oc):</h2></b>
+<br>
+
+<form id="form" action="" method="get">
+ITQB isolate:<input type="text" name="insert" id="insert" /><br /><br /> <!-- S3DB rule: 2268???? -->
+
+Freezer:
+
+<SELECT NAME="selectFreezer"> <!-- S3DB rule: 167240  -->
+<OPTION SELECTED VALUE="">Select...</OPTION>
+<OPTION>Bartolomeu</OPTION>
+<OPTION>Cabral</OPTION>
+<OPTION>Gama</OPTION>
+</SELECT><br /><br />
+
+Tower:
+<SELECT NAME="selectTower"> <!-- S3DB rule: 167242 -->
+<OPTION SELECTED VALUE="">Select...</OPTION>
+<OPTION>A</OPTION><OPTION>B</OPTION><OPTION>C</OPTION><OPTION>D</OPTION><OPTION>E</OPTION>
+<OPTION>F</OPTION><OPTION>G</OPTION><OPTION>H</OPTION><OPTION>I</OPTION><OPTION>J</OPTION>
+<OPTION>K</OPTION><OPTION>L</OPTION><OPTION>M</OPTION><OPTION>N</OPTION><OPTION>O</OPTION>
+<OPTION>P</OPTION><OPTION>Q</OPTION><OPTION>R</OPTION><OPTION>S</OPTION><OPTION>T</OPTION>
+<OPTION>U</OPTION><OPTION>V</OPTION><OPTION>W</OPTION><OPTION>X</OPTION><OPTION>Y</OPTION>
+<OPTION>Z</OPTION></SELECT><br /><br />
+
+Box: <!-- S3DB rule: 167244 -->
+
+<script>
+
+document.write("<select>");for(i=0;i<12;i++){var boxVar = 1 + i;
+document.write('<option value=\"' + boxVar + '\">' + boxVar + '</option>');}
+document.write("</select>");</script> <br /><br />
+
+Slot: <!-- S3DB rule: 167246 --> <script>
+document.write("<select>");for(i=0;i<100;i++){var slotVar = 1 + i;
+document.write('<option value=\"' + slotVar + '\">' + slotVar + '</option>');}
+document.write("</select>");
+</script> <br /><br />
+
+Date of freezing: <!-- S3DB rule: 167251 --> <script>
+document.write("<select>");for(i=0;i<100;i++){var dateVar = 1930 + i;
+document.write('<option value=\"' + dateVar + '\">' + dateVar + '</option>');}
+document.write("</select>");
+</script> 
+<script>
+document.write("<select>");for(i=0;i<12;i++){var dateVar = 1 + i;
+document.write('<option value=\"' + dateVar + '\">' + dateVar + '</option>');}
+document.write("</select>");
+</script>
+<script>
+document.write("<select>");for(i=0;i<31;i++){var dateVar = 1 + i;
+document.write('<option value=\"' + dateVar + '\">' + dateVar + '</option>');}
+document.write("</select>");
+</script><br /><br />
+
+Researcher: <!-- S3DB rule: 167256 --> <input type="text" name="Researcher" /><br /><br />
+
+Notes: <!-- S3DB rule: 34253 --> <input type="text" name="notes" /><br /><br />
+
+<input type="submit" value="Save" id="save" />
+<!-- <button onclick="mySub()">Save</button> -->
+</div>
+<br>
+<br>
+
+<div id="freezer">
+<h2><b>REVCO Freezer (d):</h2></b>
+
+<br>
+
+<form id="form" action="" method="get">
+ITQB isolate:<input type="text" name="insert" id="insert"/><br /><br /> <!-- S3DB rule: 2268???? -->
+
+Freezer: <!-- S3DB rule: 167241 --> <SELECT NAME="selectFreezer">
+<OPTION SELECTED VALUE="">Select...</OPTION>
+<OPTION>Bartolomeu</OPTION>
+<OPTION>Cabral</OPTION>
+<OPTION>Gama</OPTION>
+</SELECT><br /><br />
+
+Tower: <!-- S3DB rule: 167243 --> <SELECT NAME="selectTower">
+<OPTION SELECTED VALUE="">Select...</OPTION>
+<OPTION>A</OPTION><OPTION>B</OPTION><OPTION>C</OPTION><OPTION>D</OPTION><OPTION>E</OPTION>
+<OPTION>F</OPTION><OPTION>G</OPTION><OPTION>H</OPTION><OPTION>I</OPTION><OPTION>J</OPTION>
+<OPTION>K</OPTION><OPTION>L</OPTION><OPTION>M</OPTION><OPTION>N</OPTION><OPTION>O</OPTION>
+<OPTION>P</OPTION><OPTION>Q</OPTION><OPTION>R</OPTION><OPTION>S</OPTION><OPTION>T</OPTION>
+<OPTION>U</OPTION><OPTION>V</OPTION><OPTION>W</OPTION><OPTION>X</OPTION><OPTION>Y</OPTION>
+<OPTION>Z</OPTION></SELECT><br /><br />
+
+Box: <!-- S3DB rule: 167245 --> <script>document.write("<select>");for(i=0;i<12;i++){var boxVar = 1 + i;
+document.write('<option value=\"' + boxVar + '\">' + boxVar + '</option>');}
+document.write("</select>");</script> <br /><br />
+
+Slot: <!-- S3DB rule: 167247 --> <script>
+document.write("<select>");for(i=0;i<100;i++){var slotVar = 1 + i;
+document.write('<option value=\"' + slotVar + '\">' + slotVar + '</option>');}
+document.write("</select>");
+</script> <br /><br />
+
+Date of freezing: <!-- S3DB rule: 167252 --> <script>
+document.write("<select>");for(i=0;i<100;i++){var dateVar = 1930 + i;
+document.write('<option value=\"' + dateVar + '\">' + dateVar + '</option>');}
+document.write("</select>");
+</script> 
+<script>
+document.write("<select>");for(i=0;i<12;i++){var dateVar = 1 + i;
+document.write('<option value=\"' + dateVar + '\">' + dateVar + '</option>');}
+document.write("</select>");
+</script>
+<script>
+document.write("<select>");for(i=0;i<31;i++){var dateVar = 1 + i;
+document.write('<option value=\"' + dateVar + '\">' + dateVar + '</option>');}
+document.write("</select>");
+</script><br /><br />
+
+Researcher: <!-- S3DB rule: 167257 --> <input type="text" name="Researcher" /><br /><br />
+
+Notes: <!-- S3DB rule: 224903 --> <input type="text" name="notes" /><br /><br />
+
+<button onclick="mySub()">Save</button>
+
+</div>
+
+<br>
+
+<div id="freezer">
+<h2><b>Liquid Nitrogen Freezing:</b></h2>
+
+<form id="form" action="" method="get">
+ITQB isolate:<input type="text" name="insert" id="insert"/><br /><br /> <!-- S3DB rule: 2268???? -->
+
+Freezer: <!-- S3DB rule: 207584 --> <SELECT NAME="freezer">
+<OPTION SELECTED VALUE="">Select...</OPTION>
+<OPTION>Jupiter</OPTION>
+</SELECT><br /><br />
+
+Canister: <!-- S3DB rule: 207585 --> <script>
+document.write("<select>");for(i=0;i<10;i++){var canisterVar = 1 + i;
+document.write('<option value=\"' + canisterVar + '\">' + canisterVar + '</option>');}
+document.write("</select>");</script> <br /><br />
+
+Goblet: <!-- S3DB rule: 207586 --> <SELECT NAME="goblet">
+<OPTION SELECTED VALUE="">Select...</OPTION>
+<OPTION>A</OPTION><OPTION>B</OPTION><OPTION>C</OPTION><OPTION>D</OPTION><OPTION>E</OPTION>
+<OPTION>F</OPTION><OPTION>G</OPTION><OPTION>H</OPTION>
+</SELECT><br /><br />
+
+Position: <!-- S3DB rule: 207587 --> <script>
+document.write("<select>");for(i=0;i<10;i++){var positionVar = 1 + i;
+document.write('<option value=\"' + positionVar + '\">' + positionVar + '</option>');}
+document.write("</select>");</script> <br /><br />
+
+Colour: <!-- S3DB rule: 207588 --> <SELECT NAME="straw_colour">
+<OPTION SELECTED VALUE="">Select...</OPTION>
+<OPTION>clear</OPTION>
+<OPTION>dark blue</OPTION>
+<OPTION>dark green</OPTION>
+<OPTION>grey</OPTION>
+<OPTION>light blue</OPTION>
+<OPTION>light green</OPTION>
+<OPTION>orange</OPTION>
+<OPTION>pink</OPTION>
+<OPTION>red</OPTION>
+<OPTION>yellow</OPTION>
+</SELECT><br /><br />
+
+Stock: <!-- S3DB rule: 207589 --> <script>
+document.write("<select>");for(i=0;i<10;i++){var stockVar = 1 + i;
+document.write('<option value=\"' + stockVar + '\">' + stockVar + '</option>');}
+document.write("</select>");</script> <br /><br />
+
+Date of freezing: <!-- S3DB rule: 207590 --> <script>
+document.write("<select>");for(i=0;i<100;i++){var dateVar = 1930 + i;
+document.write('<option value=\"' + dateVar + '\">' + dateVar + '</option>');}
+document.write("</select>");
+</script> 
+<script>
+document.write("<select>");for(i=0;i<12;i++){var dateVar = 1 + i;
+document.write('<option value=\"' + dateVar + '\">' + dateVar + '</option>');}
+document.write("</select>");
+</script>
+<script>
+document.write("<select>");for(i=0;i<31;i++){var dateVar = 1 + i;
+document.write('<option value=\"' + dateVar + '\">' + dateVar + '</option>');}
+document.write("</select>");
+</script><br /><br />
+
+<button onclick="mySub()">Save</button>
+
+</div>
+
+<br>
+
+</form>
+
+<br />
+
+<!-- start div "bottom" -->
+<div id="bottom">
+ <b>S3DB - Simple Sloppy Semantic Database </b>
+ <br>
+ <a href="http://www.s3db.org/">
+ <img id="S3DB.org" src="images/link.png"/>
+ </a>
+ <a href="mailto:candida@itqb.unl.pt.com?Subject=Hello%20again">
+ <img id="email" src="images/govdelivery_email_option.png" alt="mail" width="35" height="35" />
+ </a>
+
+ <a href="info.html">
+ <img id="info" src="images/Information-icon.png" width="30" height="30" />
+ </a>
+</div> <!-- end div "bottom" -->
+
+</body>
+</html>
