@@ -24,6 +24,24 @@ body {
 	color:#666;
 	padding:0;
 	}
+   
+/*Coluna Left */
+#left {
+        float: left;
+        width: 230px;
+        min-height: 760px;
+        background-color: #F0FAFF;
+	text-align:left;
+}
+
+/* Coluna Centro */
+#center {
+	float: left;
+	min-height: 760px;
+	width: 730px;
+	background-color: #FFFACD;
+        overflow: auto;
+}
 
 /* Bottom */
 #bottom {
