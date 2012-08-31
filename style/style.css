@@ -19,20 +19,20 @@ body {
 
 /* Container */
 #container {
-	width:900px;	
 	margin:30px auto;
 	color:#666;
 	padding:0;
+  width: 960px;
 	}
    
 /*Coluna Left */
 #left {
-        float: left;
-        width: 230px;
-        min-height: 760px;
-        background-color: #F0FAFF;
+  float: left;
+  width: 230px;
+  min-height: 760px;
+  background-color: #F0FAFF;
 	text-align:left;
-}
+  }
 
 /* Coluna Centro */
 #center {
@@ -40,7 +40,7 @@ body {
 	min-height: 760px;
 	width: 730px;
 	background-color: #FFFACD;
-        overflow: auto;
+  overflow: auto;
 }
 
 /* Bottom */
