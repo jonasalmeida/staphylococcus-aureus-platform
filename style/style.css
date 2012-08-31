@@ -45,6 +45,7 @@ body {
 
 /* Bottom */
 #bottom {
+  clear: both;
 	background-color:#11CAFF;	
 	font:verdana;
 	font-size: 30px; 
