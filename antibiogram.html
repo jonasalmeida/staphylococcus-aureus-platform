@@ -111,7 +111,7 @@ var variavel1 = variavel[1].split("=");
      
 	if(total == i){
       var select1 = select.join(" ");
-      var url = "http://204.232.200.16/s3db2/sparql.php?key=Staphylococcus&query=";
+      var url = "http://204.232.200.16/s3db2/sparql.php?key="+key+"&query=";
       var query = (url + "SELECT ?Isolate " + select1 + " WHERE {" + " OPTIONAL {" + sparql3 + sparql4 + "} ?isolate0 rdfs:label ?Isolate }&format=json&callback=?");
       console.log(query);
       formataColuna(query);
