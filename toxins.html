@@ -1,4 +1,4 @@
-<!-- Cândida's Script 11-10-2011 -->
+<!-- CÃ¢ndida's Script 11-10-2011 -->
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -161,15 +161,13 @@ function formataColuna(query){
 <div id="menu">
 <ul class="menu">
 
-	<li><a href="dataset.html" title="DataSet"><span>Data Set</span>
-
-	<li><a href="Storage.html" title="VirtualREVCO"><span>Virtual REVCO</span>
-			
-	<li><a href="query.html" title="SPARQL">SPARQL Queries</a></li>
-	
-	<li><a href="Statistics.html" title="Stats"><span>Statistical Analysis</span>
-
-	<li><a href="others.html" title="others">Previous Interfaces</a></li>					
+  <script>  
+  document.write("<li><a href='dataset.html?key="+key+"' title='DataSet'><span>Data Set</span></a></li>");
+  document.write("<li><a href='storage.html?key="+key+"' title='VirtualREVCO'><span>Virtual REVCO</span></a></li>");
+  document.write("<li><a href='query.html?key="+key+"' title='SPARQL'>SPARQL Queries</a></li>");
+  document.write("<li><a href='2x2ct.html?key="+key+"'>&nbsp;Two-way Contingency Table</a></li>");  
+ </script>  
+ 
 </ul>
 </div>
 <!-- End MENU -->
