@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<head>
+ <meta charset="utf-8">
+ <script type="text/javascript" src="js/jquery-1.6.2.js"></script>
+<script type="text/javascript">
+$(function() {
+$("#container").before($("<div id='loading'/>").text("Loading..."));
+  var json = "http://204.232.200.16/s3db2/sparql.php?key=Staphylococcus&query=SELECT ?Isolate ?MLST ?PFGE WHERE {?itqbisolate :R167340 ?molecularTyping . OPTIONAL {?molecularTyping :R172930 ?MLST . } OPTIONAL {?molecularTyping :R171929 ?PFGE . } ?itqbisolate rdfs:label ?Isolate } LIMIT=30 &format=json&callback=?"; 
+
+var returnedData = localStorage.getItem("returnedData");
+returnedData = JSON.parse(returnedData);
+
+if(returnedData == null)
+{    
+ returnedData = [];
+ var table = "<table border='1' cellpadding='0' cellspacing='1'>";
+ $.getJSON(json, function(data) {
+  returnedData = data;
+  localStorage.setItem("returnedData",JSON.stringify(returnedData)); 
+  $.each(data, function(i, object){
+   table += "<tr>";
+   $.each(object, function(j, obj){ 
+    table += "<td>" + obj + "</td>";
+   });
+   table += "</tr>";
+  }); 
+  table += "</table>";
+  $('#container').html(table);
+ });
+}
+else
+{
+ var table = "<table border='1' cellpadding='0' cellspacing='1'>";
+ 
+ for (i=0;i<returnedData.length;i++)
+ {
+  table += "<tr>";
+  $.each(returnedData[i], function(i, object){
+   table += "<td>" + object + "</td>";
+  });
+  table += "</tr>";
+ }
+ table += "</table>";
+ $('#container').html(table);
+} 
+});
+</script>
+</head>
+<body>
+ <ul id='container'></ul>
+  <button onclick="javascript:localStorage.clear();">Clear localStorage</button>
+</body>
+</html>
