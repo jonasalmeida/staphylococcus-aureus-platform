@@ -32,6 +32,10 @@
 
 <script type="text/javascript">
 
+ var variavel = location.search.split("?");
+ var variavel1 = variavel[1].split("=");
+ var key = variavel1[1];
+
 function toggle1(showHideDiv, switchImgTag) {
         var ele = document.getElementById(showHideDiv);
         var imageEle = document.getElementById(switchImgTag);
@@ -58,35 +62,31 @@ function toggle2(contentDiv, controlDiv) {
 
 $(document).ready(function(){
 
- var variavel = location.search.split("?");
- var variavel1 = variavel[1].split("=");
- var key = variavel1[1];
-
  $('img').bind('click', function (evt) 
   {        
    if($(this).attr('id') == 'img1')
     {
-     var query="http://204.232.200.16/s3db2/sparql.php?key=Staphylococcus&query=SELECT ?Isolate ?enterotoxin WHERE {?itqbisolate :R167340 ?IMT .?IMT :R173107 ?enterotoxin .?itqbisolate rdfs:label ?Isolate }&format=json&callback=?";
+     var query="http://204.232.200.16/s3db2/sparql.php?key="+key+"&query=SELECT ?Isolate ?enterotoxin WHERE {?itqbisolate :R167340 ?IMT .?IMT :R173107 ?enterotoxin .?itqbisolate rdfs:label ?Isolate }&format=json&callback=?";
      formataColuna(query);
     } 
     if($(this).attr('id') == 'img2')
      {
-      var query="http://204.232.200.16/s3db2/sparql.php?key=Staphylococcus&query=SELECT ?Isolate ?exfoliatin WHERE {?itqbisolate :R167340 ?IMT .?IMT :R116873 ?exfoliatin .?itqbisolate rdfs:label ?Isolate }&format=json&callback=?";
+      var query="http://204.232.200.16/s3db2/sparql.php?key="+key+"&query=SELECT ?Isolate ?exfoliatin WHERE {?itqbisolate :R167340 ?IMT .?IMT :R116873 ?exfoliatin .?itqbisolate rdfs:label ?Isolate }&format=json&callback=?";
       formataColuna(query);
      } 
      if($(this).attr('id') == 'img3')
       {
-       var query="http://204.232.200.16/s3db2/sparql.php?key=Staphylococcus&query=SELECT ?Isolate ?hemolysin WHERE {?itqbisolate :R167340 ?IMT .?IMT :R116871 ?hemolysin .?itqbisolate rdfs:label ?Isolate }&format=json&callback=?";
+       var query="http://204.232.200.16/s3db2/sparql.php?key="+key+"&query=SELECT ?Isolate ?hemolysin WHERE {?itqbisolate :R167340 ?IMT .?IMT :R116871 ?hemolysin .?itqbisolate rdfs:label ?Isolate }&format=json&callback=?";
        formataColuna(query);
       }
 	  if($(this).attr('id') == 'img4')
       {
-       var query="http://204.232.200.16/s3db2/sparql.php?key=Staphylococcus&query=SELECT ?Isolate ?leukotoxin WHERE {?itqbisolate :R167340 ?IMT .?IMT :R173147 ?leukotoxin .?itqbisolate rdfs:label ?Isolate }&format=json&callback=?";
+       var query="http://204.232.200.16/s3db2/sparql.php?key="+key+"&query=SELECT ?Isolate ?leukotoxin WHERE {?itqbisolate :R167340 ?IMT .?IMT :R173147 ?leukotoxin .?itqbisolate rdfs:label ?Isolate }&format=json&callback=?";
        formataColuna(query);
       }
 	   if($(this).attr('id') == 'img5')
       {
-       var query="http://204.232.200.16/s3db2/sparql.php?key=Staphylococcus&query=SELECT ?Isolate ?enterotoxin ?exfoliatin ?hemolysin ?leukotoxin WHERE {?itqbisolate :R167340 ?IMT . OPTIONAL {?IMT :R173107 ?enterotoxin . } OPTIONAL {?IMT :R116873 ?exfoliatin . } OPTIONAL {?IMT :R116871 ?hemolysin . } OPTIONAL {?IMT :R173147 ?leukotoxin . } ?itqbisolate rdfs:label ?Isolate }&format=json&callback=?";
+       var query="http://204.232.200.16/s3db2/sparql.php?key="+key+"&query=SELECT ?Isolate ?enterotoxin ?exfoliatin ?hemolysin ?leukotoxin WHERE {?itqbisolate :R167340 ?IMT . OPTIONAL {?IMT :R173107 ?enterotoxin . } OPTIONAL {?IMT :R116873 ?exfoliatin . } OPTIONAL {?IMT :R116871 ?hemolysin . } OPTIONAL {?IMT :R173147 ?leukotoxin . } ?itqbisolate rdfs:label ?Isolate }&format=json&callback=?";
        formataColuna(query);
       }
  });
