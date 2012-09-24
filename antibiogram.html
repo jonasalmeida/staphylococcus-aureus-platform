@@ -33,15 +33,13 @@
 
 <script type="text/javascript">
 
+var variavel = location.search.split("?");
+var variavel1 = variavel[1].split("=");
 var key = variavel1[1];
 
 $(document).ready(function(){
 
-var variavel = location.search.split("?");
-var variavel1 = variavel[1].split("=");
-
-
- $(':checkbox').removeAttr('checked');
+  $(':checkbox').removeAttr('checked');
   $(':checkbox').removeAttr('disabled');
   $("#field").hide(); 
   $("#field1").hide(); 
@@ -65,7 +63,7 @@ var variavel1 = variavel[1].split("=");
   });
 
    $('button#aquery').click(function() {
-   var url = "http://204.232.200.16/s3db2/sparql.php?key=Staphylococcus&query=";
+   var url = "http://204.232.200.16/s3db2/sparql.php?key="+key;
    var sparql = $('form#query').val();
    var query = (url + sparql + "&format=json&callback=?");
    formataColuna(query);
