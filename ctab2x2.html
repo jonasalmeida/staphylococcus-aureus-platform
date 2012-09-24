@@ -13,8 +13,13 @@
 <link href="style/CSSmenu.css" rel="stylesheet" type="text/css" media="screen">
 <link href="style/style.css" rel="stylesheet" type="text/css" media="screen">
 
-<script language="LiveScript">
+<script type="text/javascript">
+ var variavel = location.search.split("?");
+ var variavel1 = variavel[1].split("=");
+ var key = variavel1[1];
+</script>
 
+<script language="LiveScript">
 
 function Ln(x)    { return Math.log(x) }     
 function Exp(x)   { return Math.exp(x)}
