@@ -20,7 +20,7 @@
 #loading{
         margin:0;
         padding: 0;
-		    z-index: -1;
+        z-index: -1;
         width: 900px;
         height: 200px;
         border: 1px solid gray;
@@ -33,6 +33,8 @@
  var variavel = location.search.split("?");
  var variavel1 = variavel[1].split("=");
  var key = variavel1[1];
+  var KEY = "";
+
 
 function toggle1(showHideDiv, switchImgTag) {
         var ele = document.getElementById(showHideDiv);
@@ -59,6 +61,7 @@ function toggle2(contentDiv, controlDiv) {
 }
 
 $(document).ready(function(){
+
  $('img').bind('click', function (evt) 
   {        
    if($(this).attr('id') == 'img1')
@@ -122,17 +125,20 @@ $(document).ready(function(){
    var select = [];
    var sparql = [];
    var sparql1 = [];
+   var lskey =[];
    var total = $.find("input[type='checkbox'][name='column']:checked").length-1;
    $("input[type=checkbox][name='column']:checked").each(function(i){
     var column = [];
     column.push($(this).val());
-    
+        
     var scolumn = column.toString();
     var array = scolumn.split(",");
            
     var label = array[0];
     var regra = array[1];
     
+    lskey.push(label);
+
     sparql.push("?isolate" + i + " :" + regra + " ?" + label + " .");
     
     var field = [];
@@ -150,6 +156,7 @@ $(document).ready(function(){
       var regra1 = array1[n*2+1];
       
       sparql1.push("?" + label + " :" + regra1 + " ?" + label1 + " .");
+      lskey.push(regra1);
         }
       
      var sparql3 = sparql.join("");
@@ -159,6 +166,7 @@ $(document).ready(function(){
       var select1 = select.join(" ");
       var url = "http://204.232.200.16/s3db2/sparql.php?key="+key+"&query=";
       var query = (url + "SELECT ?Isolate " + select1 + " WHERE {" + " OPTIONAL {" + sparql3 + sparql4 + "} ?isolate0 rdfs:label ?Isolate }&format=json&callback=?");
+      KEY = lskey.join("");
       console.log(query);
       formataColuna(query);
      }
@@ -175,45 +183,83 @@ $(document).ready(function(){
   str1 = str.replace(/\?/,"");
   var str2 = str1.split("?");
   executaQuery(query,str2);
-  $("#loading").show(); 
-  
+  $("#loading").show();
 }
  
 
  function executaQuery(json,header){
-  var size = header.length;
-  var table = "Quick Find: <input type='text' id='quickfind'><a id='cleanfilters' href='#'>Clear Filters</a><br><table id='results' class='tablesorter' border='0' cellpadding='0' cellspacing='1'><thead><tr>";
-  $.each(header, function(i) {
-   table += "<th>" + header[i] + "</th>";
-  });
-  table += "</tr></thead><tbody>";
+  
+  var ldata = localStorage.getItem(KEY);
+  ldata = JSON.parse(ldata);
    
-  $.getJSON(json, function(data) {
-   $.each(data, function(i, object){ 
+  if(ldata == null){
+   var size = header.length;
+   var table = "Quick Find: <input type='text' id='quickfind'><a id='cleanfilters' href='#'>Clear Filters</a><br><table id='results' class='tablesorter' border='0' cellpadding='0' cellspacing='1'><thead><tr>";
+   $.each(header, function(i) {
+    table += "<th>" + header[i] + "</th>";
+   });
+   table += "</tr></thead><tbody>";
+   
+   $.getJSON(json, function(data) {
+    localStorage.setItem(KEY,JSON.stringify(data)); 
+     $.each(data, function(i, object){ 
+      table += "<tr>";
+     $.each(object, function(j, obj){ 
+      table += "<td>" + obj + "</td>";
+     });
+     table += "</tr>";
+    });  
+    
+    table += "</tbody>";
+    table += "<tfoot><tr><td colspan=" + size + ">&nbsp;</td></tr></tfoot>";
+    table += "</table>";
+    
+    $('#loading').hide();
+    $('form').remove();
+    $('#container').html(table);
+    var options = {
+                   additionalFilterTriggers: [$('#quickfind')],
+                   clearFiltersControls: [$('#cleanfilters')]
+                  };
+    $('#results').tableFilter(options);
+    $('#results').tablesorter({widgets: ['zebra']});
+     
+    var rowCount = $('#results >tbody >tr').length;  
+   
+   });
+  }
+  else{
+   var size = header.length;
+   var table = "Quick Find: <input type='text' id='quickfind'><a id='cleanfilters' href='#'>Clear Filters</a><br><table id='results' class='tablesorter' border='0' cellpadding='0' cellspacing='1'><thead><tr>";
+   $.each(header, function(i) {
+    table += "<th>" + header[i] + "</th>";
+   });
+   table += "</tr></thead><tbody>";
+
+   for (i=0;i<ldata.length;i++)
+   {
     table += "<tr>";
-    $.each(object, function(j, obj){ 
-     table += "<td>" + obj + "</td>";
+    $.each(ldata[i], function(i, object){
+     table += "<td>" + object + "</td>";
     });
     table += "</tr>";
-   });  
-   
-  table += "</tbody>";
-  table += "<tfoot><tr><td colspan=" + size + ">&nbsp;</td></tr></tfoot>";
-  table += "</table>";
-  
-  $('#loading').hide();
-  $('form').remove();
-  $('#container').html(table);
-  var options = {
-                additionalFilterTriggers: [$('#quickfind')],
-                clearFiltersControls: [$('#cleanfilters')]
-            };
-  $('#results').tableFilter(options);
-  $('#results').tablesorter({widgets: ['zebra']});
-
-var rowCount = $('#results >tbody >tr').length;  
-
- });
+   }
+   table += "</tbody>";
+   table += "<tfoot><tr><td colspan=" + size + ">&nbsp;</td></tr></tfoot>";
+   table += "</table>";
+    
+   $('#loading').hide();
+   $('form').remove();
+   $('#container').html(table);
+   var options = {
+                  additionalFilterTriggers: [$('#quickfind')],
+                  clearFiltersControls: [$('#cleanfilters')]
+                 };
+   $('#results').tableFilter(options);
+   $('#results').tablesorter({widgets: ['zebra']});
+    
+   var rowCount = $('#results >tbody >tr').length;  
+  }
 }
 
 </script>
