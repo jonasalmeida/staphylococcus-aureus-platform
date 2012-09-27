@@ -310,10 +310,11 @@ $(document).ready(function(){
 
 <!-- start div "other Queries" -->
 <div id ="icons" style="padding:10px align:left";>
-<a href="antibiogram.html" onclick=""><img src="images/antibiogram.png" align="left" width="150" height="30"></a>
-
-<a href="toxins.html"><img onclick="" src="images/toxins.png" align="left" width="150" height="30"></a>
-
+ <script>  
+  document.write("<a href='antibiogram.html?key="+key+"' onclick=''><img src='images/antibiogram.png' align='left' width='150' height='30'></a>");
+  document.write("<a href='toxins.html?key="+key+"' onclick=''><img src='images/toxins.png' align='left' width='150' height='30'></a>");
+ </script> 
+ 
 </div><!-- end div "other Queries" -->
 
 <br>
