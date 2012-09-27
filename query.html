@@ -33,7 +33,7 @@
  var variavel = location.search.split("?");
  var variavel1 = variavel[1].split("=");
  var key = variavel1[1];
-  var KEY = "";
+ var KEY = "";
 
 
 function toggle1(showHideDiv, switchImgTag) {
@@ -67,21 +67,25 @@ $(document).ready(function(){
    if($(this).attr('id') == 'img1')
     {
      var query="http://204.232.200.16/s3db2/sparql.php?key="+key+"&query=SELECT ?Isolate ?MLST ?PFGE WHERE {?itqbisolate :R167340 ?molecularTyping . OPTIONAL {?molecularTyping :R172930 ?MLST . } OPTIONAL {?molecularTyping :R171929 ?PFGE . } ?itqbisolate rdfs:label ?Isolate } LIMIT=3000 &format=json&callback=?";
+     KEY = "qquery1";
      formataColuna(query);
     } 
     if($(this).attr('id') == 'img2')
      {
       var query="http://204.232.200.16/s3db2/sparql.php?key="+key+"&query=SELECT ?Isolate ?SCCmecComplex ?SCCmecType WHERE {?itqbisolate :R167340 ?molecularTyping . OPTIONAL {?molecularTyping :R175680 ?SCCmecComplex . } OPTIONAL {?molecularTyping :R175688 ?SCCmecType . } ?itqbisolate rdfs:label ?Isolate }&format=json&callback=?";
+      KEY = "qquery2";
       formataColuna(query);
      } 
      if($(this).attr('id') == 'img3')
       {
        var query="http://204.232.200.16/s3db2/sparql.php?key="+key+"&query=SELECT ?Isolate ?Species ?mecA ?SCCmec ?OxacillinSusceptibility ?CefoxitinSusceptibility WHERE {?itqbisolate :R167340 ?molecularTyping . OPTIONAL {?molecularTyping :R171828 ?mecA .} OPTIONAL {?molecularTyping :R175688 ?SCCmec .} OPTIONAL {?molecularTyping :R166546 ?OxacillinSusceptibility .} OPTIONAL {?molecularTyping :R149 ?CefoxitinSusceptibility .} ?molecularTyping :R171376 ?Species FILTER (regex(?Species, \"MRSA\") || regex (?Species, \"MSSA\")) .?itqbisolate rdfs:label ?Isolate }&format=json&callback=?";
+       KEY = "qquery3";
        formataColuna(query);
       }
 	  if($(this).attr('id') == 'img4')
       {
        var query="http://204.232.200.16/s3db2/sparql.php?key="+key+"&query=DESCRIBE ?Isolate ?MLST ?PFGE WHERE {?itqbisolate :R167340 ?molecularTyping . OPTIONAL {?molecularTyping :R172930 ?MLST . } OPTIONAL {?molecularTyping :R171929 ?PFGE . } ?itqbisolate rdfs:label ?Isolate } LIMIT=3000 &format=json&callback=?";
+       KEY = "qquery4";
        formataColuna(query);
       }
  });
@@ -118,6 +122,7 @@ $(document).ready(function(){
    var url = "http://204.232.200.16/s3db2/sparql.php?key="+key+"&query=";
    var sparql = $('textarea#aquery').val();
    var query = (url + sparql + "&format=json&callback=?");
+   KEY = "qadvanced";
    formataColuna(query);
   });
   
