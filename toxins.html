@@ -22,7 +22,7 @@
 #loading{
 	margin:0;
 	padding: 0;
-    z-index: -1;
+  z-index: -1;
 	width: 900px;
 	height: 200px;
 	border: 1px solid gray;
@@ -184,7 +184,10 @@ function formataColuna(query){
 
 <!-- start div "other Queries" -->
 <div id ="icons" style="padding:10px align:left";>
-<a href="antibiogram.html" onclick=""><img src="images/antibiogram.png" align="left" width="150" height="30"></a>
+
+ <script>  
+  document.write("<a href='antibiogram.html?key="+key+"' onclick=''><img src='images/antibiogram.png' align='left' width='150' height='30'></a>");
+ </script> 
 
 </div><!-- end div "other Queries" -->
 
